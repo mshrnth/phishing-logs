@@ -1,0 +1,126 @@
+# ==============================================================================
+# INBOUND SMTP GATEWAY LOGS (mailgw01.contoso.com)
+# Scenario: Inbound Phishing Delivery - Pre-User Interaction Stage
+# Gateway Ingress Public IP: 198.145.89.25 / Gateway Egress Public IP: 198.145.89.26
+# Originating Attacker IP: 185.196.220.44 (Attacker VPS, rDNS failed / non-resolving)
+# Claimed Sender: "Contoso HR & Payroll" <notifications@payroll-secure-portal.com>
+# Target Recipient: Jane Doe <jdoe@contoso.com>
+# Relay Target: contoso-com.mail.protection.outlook.com [104.47.74.35]:25
+# ==============================================================================
+
+# --- SECTION 1: POSTFIX / MTA SYSTEM & SESSION LOGS (SYSLOG RFC 5424) ---
+
+2026-10-01T02:45:07.810Z mailgw01.contoso.com postfix/smtpd[48210]: connect from unknown[185.196.220.44]
+2026-10-01T02:45:07.925Z mailgw01.contoso.com postfix/smtpd[48210]: warning: hostname vps-host-44.bulletrelay.net does not resolve to address 185.196.220.44: Name or service not known
+2026-10-01T02:45:08.012Z mailgw01.contoso.com postfix/smtpd[48210]: Anonymous TLS connection established from unknown[185.196.220.44]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+2026-10-01T02:45:08.114Z mailgw01.contoso.com postfix/smtpd[48210]: 4X8B9K21zqz2Vb: client=unknown[185.196.220.44]
+2026-10-01T02:45:08.420Z mailgw01.contoso.com postfix/cleanup[48215]: 4X8B9K21zqz2Vb: message-id=<4fa7d3910c2847a9b8e21975b3c48201@mail.payroll-secure-portal.com>
+2026-10-01T02:45:08.612Z mailgw01.contoso.com opendkim[1104]: 4X8B9K21zqz2Vb: no signature data found for domain payroll-secure-portal.com
+2026-10-01T02:45:08.784Z mailgw01.contoso.com policyd-spf[48218]: prepend Received-SPF: SoftFail (mailgw01.contoso.com: domain of transitioning notifications@payroll-secure-portal.com does not designate 185.196.220.44 as permitted sender) identity=mailfrom; client-ip=185.196.220.44; helo=mail.payroll-secure-portal.com; envelope-from=notifications@payroll-secure-portal.com; receiver=jdoe@contoso.com
+2026-10-01T02:45:08.850Z mailgw01.contoso.com dmarc-filter[1180]: 4X8B9K21zqz2Vb: dmarc-result=fail (p=none sp=none pct=100) reason="SPF failed, DKIM missing" domain=payroll-secure-portal.com
+2026-10-01T02:45:09.032Z mailgw01.contoso.com mailfilter[48220]: 4X8B9K21zqz2Vb: Antivirus=CLEAN SpamCheck=SUSPICIOUS Score=3.9/5.0 RuleHits=HTML_MESSAGE,SUSP_URL_KEYWORD,SPF_SOFTFAIL,NO_DKIM,URGENT_SUBJECT Action=TAG_HEADER
+2026-10-01T02:45:09.210Z mailgw01.contoso.com postfix/qmgr[2814]: 4X8B9K21zqz2Vb: from=<notifications@payroll-secure-portal.com>, size=6742, nrcpt=1 (queue active)
+2026-10-01T02:45:09.410Z mailgw01.contoso.com postfix/smtp[48225]: 4X8B9K21zqz2Vb: to=<jdoe@contoso.com>, relay=contoso-com.mail.protection.outlook.com[104.47.74.35]:25, delay=1.6, delays=1.1/0.01/0.12/0.37, dsn=2.6.0, status=sent (250 2.6.0 <4fa7d3910c2847a9b8e21975b3c48201@mail.payroll-secure-portal.com> [InternalId=894321092834, Hostname=SJ0PR03MB7491.namprd03.prod.outlook.com] 7124 bytes in 0.281s, 24.772 KB/sec Queued mail for delivery)
+2026-10-01T02:45:09.450Z mailgw01.contoso.com postfix/qmgr[2814]: 4X8B9K21zqz2Vb: removed
+2026-10-01T02:45:09.520Z mailgw01.contoso.com postfix/smtpd[48210]: disconnect from unknown[185.196.220.44] ehlo=2 starttls=1 mail=1 rcpt=1 data=1 quit=1 commands=7
+
+
+# --- SECTION 2: RAW SMTP SESSION CAPTURE (mailgw01 INGRESS INTERFACE) ---
+
+[SESSION ID: 4X8B9K21zqz2Vb]
+[PEER: 185.196.220.44:48214 -> 198.145.89.25:25]
+[TIME: 2026-10-01 02:45:07.810 UTC]
+
+S: 220 mailgw01.contoso.com ESMTP Postfix (Ubuntu)
+C: EHLO mail.payroll-secure-portal.com
+S: 250-mailgw01.contoso.com
+S: 250-PIPELINING
+S: 250-SIZE 52428800
+S: 250-VRFY
+S: 250-ETRN
+S: 250-STARTTLS
+S: 250-ENHANCEDSTATUSCODES
+S: 250-8BITMIME
+S: 250-DSN
+S: 250-SMTPUTF8
+S: 250 CHUNKING
+C: STARTTLS
+S: 220 2.0.0 Ready to start TLS
+[--- TLSv1.3 Handshake Completed: TLS_AES_256_GCM_SHA384 ---]
+C: EHLO mail.payroll-secure-portal.com
+S: 250-mailgw01.contoso.com
+S: 250-PIPELINING
+S: 250-SIZE 52428800
+S: 250-VRFY
+S: 250-ETRN
+S: 250-ENHANCEDSTATUSCODES
+S: 250-8BITMIME
+S: 250-DSN
+S: 250-SMTPUTF8
+S: 250 CHUNKING
+C: MAIL FROM:<notifications@payroll-secure-portal.com>
+S: 250 2.1.0 Ok
+C: RCPT TO:<jdoe@contoso.com>
+S: 250 2.1.5 Ok
+C: DATA
+S: 354 End data with <CR><LF>.<CR><LF>
+C: Received: from mail.payroll-secure-portal.com (localhost [127.0.0.1])
+C: 	by mail.payroll-secure-portal.com (Postfix) with ESMTP id 3fa89b12
+C: 	for <jdoe@contoso.com>; Thu,  1 Oct 2026 02:45:06 +0000 (UTC)
+C: Date: Thu, 01 Oct 2026 02:45:06 +0000
+C: To: <jdoe@contoso.com>
+C: From: "Contoso HR & Payroll" <notifications@payroll-secure-portal.com>
+C: Reply-To: "Direct Deposit Support" <payroll-update@payroll-secure-portal.com>
+C: Subject: Urgent: Mandatory Verification of Direct Deposit Allocation
+C: Message-ID: <4fa7d3910c2847a9b8e21975b3c48201@mail.payroll-secure-portal.com>
+C: X-Priority: 1
+C: X-Mailer: PHPMailer 6.8.0 (https://github.com/PHPMailer/PHPMailer)
+C: MIME-Version: 1.0
+C: Content-Type: multipart/alternative;
+C: 	boundary="b1_4fa7d3910c2847a9b8e21975b3c48201"
+C: Content-Transfer-Encoding: 8bit
+C: 
+C: This is a multi-part message in MIME format.
+C: 
+C: --b1_4fa7d3910c2847a9b8e21975b3c48201
+C: Content-Type: text/plain; charset=us-ascii
+C: 
+C: Dear Jane Doe,
+C: 
+C: A change request was submitted for your Contoso Direct Deposit payment instructions on October 1, 2026.
+C: 
+C: If you did not authorize this modification, please review and verify your banking profile immediately by visiting:
+C: https://contoso-employee-verification.secure-auth-gateway.com/auth/login?id=jdoe-9921
+C: 
+C: This link will expire within 24 hours.
+C: 
+C: Regards,
+C: Contoso HR & Compensation Services
+C: 
+C: --b1_4fa7d3910c2847a9b8e21975b3c48201
+C: Content-Type: text/html; charset=us-ascii
+C: 
+C: <!DOCTYPE html>
+C: <html>
+C: <head><meta charset="utf-8"></head>
+C: <body style="font-family: Arial, sans-serif; color: #333;">
+C: <table width="600" cellpadding="0" cellspacing="0" style="border: 1px solid #ddd; padding: 20px;">
+C: <tr><td>
+C: <h2 style="color: #004b87;">Contoso Corporate Portal - Action Required</h2>
+C: <p>Dear Jane Doe,</p>
+C: <p>A change request was submitted for your <strong>Direct Deposit Payment Account</strong> on <strong>October 1, 2026 at 02:41 UTC</strong>.</p>
+C: <p>If this was not requested by you, please review and reject the pending changes immediately to prevent misrouted disbursement:</p>
+C: <p style="text-align: center; margin: 30px 0;">
+C: <a href="https://contoso-employee-verification.secure-auth-gateway.com/auth/login?id=jdoe-9921" style="background-color: #0078d4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Review Direct Deposit Profile</a>
+C: </p>
+C: <p><small>Reference Ticket: #DD-202610-88190<br>Security Notice: Contoso Information Security will never ask for your password via email.</small></p>
+C: </td></tr>
+C: </table>
+C: </body>
+C: </html>
+C: 
+C: --b1_4fa7d3910c2847a9b8e21975b3c48201--
+C: .
+S: 250 2.0.0 Ok: queued as 4X8B9K21zqz2Vb
+C: QUIT
+S: 221 2.0.0 Bye
