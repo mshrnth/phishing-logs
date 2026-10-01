@@ -1,0 +1,123 @@
+# ==============================================================================
+# INBOUND SMTP GATEWAY LOG (mailgw01.contoso.com)
+# Message Index: 04 | Theme: Teams / PBX Cloud Voicemail Notification Lure
+# Classification: PHISHING
+# Gateway Ingress Public IP: 198.145.89.25 / Gateway Egress Public IP: 198.145.89.26
+# Sender IP: 193.106.191.22 (unknown[193.106.191.22])
+# Sender: "Microsoft Teams Voicemail Service" <noreply-voicemail@cloud-voicemail-portal.com>
+# Recipient: "David Ross" <dross@contoso.com>
+# Queue ID: 4XAB0E664Ezqz2Vb | Relay Target: BN8NAM11FT029.mail.protection.outlook.com [104.47.74.35]:25
+# ==============================================================================
+
+# --- SECTION 1: POSTFIX / MTA SESSION LOGS (SYSLOG RFC 3164) ---
+
+2026-10-01T04:45:41.100Z mailgw01.contoso.com postfix/smtpd[48210]: connect from unknown[193.106.191.22]
+2026-10-01T04:45:41.225Z mailgw01.contoso.com postfix/smtpd[48210]: warning: hostname vps-node191.telecom-cloud.net does not resolve to address 193.106.191.22: Name or service not known
+2026-10-01T04:45:41.412Z mailgw01.contoso.com postfix/smtpd[48210]: Anonymous TLS connection established from unknown[193.106.191.22]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+2026-10-01T04:45:41.784Z mailgw01.contoso.com postfix/policyd-spf[48218]: prepend Received-SPF: SoftFail (mailgw01.contoso.com: domain of transitioning noreply-voicemail@cloud-voicemail-portal.com does not designate 193.106.191.22 as permitted sender) identity=mailfrom; client-ip=193.106.191.22; helo=pbx01.cloud-voicemail-portal.com; envelope-from=noreply-voicemail@cloud-voicemail-portal.com; receiver=dross@contoso.com
+2026-10-01T04:45:41.850Z mailgw01.contoso.com postfix/opendkim[1104]: 4XAB0E664Ezqz2Vb: no signature data found for domain cloud-voicemail-portal.com
+2026-10-01T04:45:41.920Z mailgw01.contoso.com postfix/dmarc-filter[1180]: 4XAB0E664Ezqz2Vb: dmarc-result=fail (p=none sp=none pct=100) reason="SPF failed, DKIM missing" domain=cloud-voicemail-portal.com
+2026-10-01T04:45:42.114Z mailgw01.contoso.com postfix/smtpd[48210]: 4XAB0E664Ezqz2Vb: client=unknown[193.106.191.22]
+2026-10-01T04:45:42.420Z mailgw01.contoso.com postfix/cleanup[48215]: 4XAB0E664Ezqz2Vb: message-id=<9c3eb2d591e1aa9676f72255c01f36bf@cloud-voicemail-portal.com>
+2026-10-01T04:45:42.680Z mailgw01.contoso.com postfix/mailfilter[48220]: 4XAB0E664Ezqz2Vb: Antivirus=CLEAN SpamCheck=SUSPICIOUS Score=2.8/5.0 Action=TAG_HEADER
+2026-10-01T04:45:42.850Z mailgw01.contoso.com postfix/qmgr[2814]: 4XAB0E664Ezqz2Vb: from=<noreply-voicemail@cloud-voicemail-portal.com>, size=7200, nrcpt=1 (queue active)
+2026-10-01T04:45:43.714Z mailgw01.contoso.com postfix/smtp[48225]: 4XAB0E664Ezqz2Vb: to=<dross@contoso.com>, relay=contoso-com.mail.protection.outlook.com[104.47.74.35]:25, delay=1.6, delays=1.2/0.01/0.13/0.28, dsn=2.6.0, status=sent (250 2.6.0 <9c3eb2d591e1aa9676f72255c01f36bf@cloud-voicemail-portal.com> [InternalId=460137100173, Hostname=SJ0PR03MB7491.namprd03.prod.outlook.com] 7582 bytes in 0.281s, 26.350 KB/sec Queued mail for delivery)
+2026-10-01T04:45:43.754Z mailgw01.contoso.com postfix/qmgr[2814]: 4XAB0E664Ezqz2Vb: removed
+2026-10-01T04:45:43.824Z mailgw01.contoso.com postfix/smtpd[48210]: disconnect from unknown[193.106.191.22] ehlo=2 starttls=1 mail=1 rcpt=1 data=1 quit=1 commands=7
+
+
+# --- SECTION 2: RAW SMTP SESSION CAPTURE (mailgw01 INGRESS INTERFACE) ---
+
+[SESSION ID: 4XAB0E664Ezqz2Vb]
+[PEER: 193.106.191.22:48214 -> 198.145.89.25:25]
+[TIME: 2026-10-01T04:45:41.100Z]
+
+S: 220 mailgw01.contoso.com ESMTP Postfix (Ubuntu)
+C: EHLO pbx01.cloud-voicemail-portal.com
+S: 250-mailgw01.contoso.com
+S: 250-PIPELINING
+S: 250-SIZE 52428800
+S: 250-VRFY
+S: 250-ETRN
+S: 250-STARTTLS
+S: 250-ENHANCEDSTATUSCODES
+S: 250-8BITMIME
+S: 250-DSN
+S: 250-SMTPUTF8
+S: 250 CHUNKING
+C: STARTTLS
+S: 220 2.0.0 Ready to start TLS
+[--- TLSv1.3 Handshake Completed: TLS_AES_256_GCM_SHA384 ---]
+C: EHLO pbx01.cloud-voicemail-portal.com
+S: 250-mailgw01.contoso.com
+S: 250-PIPELINING
+S: 250-SIZE 52428800
+S: 250-VRFY
+S: 250-ETRN
+S: 250-ENHANCEDSTATUSCODES
+S: 250-8BITMIME
+S: 250-DSN
+S: 250-SMTPUTF8
+S: 250 CHUNKING
+C: MAIL FROM:<noreply-voicemail@cloud-voicemail-portal.com>
+S: 250 2.1.0 Ok
+C: RCPT TO:<dross@contoso.com>
+S: 250 2.1.5 Ok
+C: DATA
+S: 354 End data with <CR><LF>.<CR><LF>
+C: Received: from pbx01.cloud-voicemail-portal.com (localhost [127.0.0.1])
+C: 	by pbx01.cloud-voicemail-portal.com with ESMTP id 4E6DD58B
+C: 	for <dross@contoso.com>; Thu, 01 Oct 2026 04:45:40 +0000
+C: Date: Thu, 01 Oct 2026 04:45:40 +0000
+C: To: "David Ross" <dross@contoso.com>
+C: From: "Microsoft Teams Voicemail Service" <noreply-voicemail@cloud-voicemail-portal.com>
+C: Reply-To: Unified Messaging Support <support@cloud-voicemail-portal.com>
+C: Subject: New Audio Voicemail from +1 (415) 890-4412 (1m 18s) - Listen Online
+C: Message-ID: <9c3eb2d591e1aa9676f72255c01f36bf@cloud-voicemail-portal.com>
+C: X-Mailer: Postfix with Python-smtplib
+C: MIME-Version: 1.0
+C: Content-Type: multipart/alternative;
+C: 	boundary="------------9c3eb2d591e1aa9676f72255"
+C: Content-Transfer-Encoding: 8bit
+C: 
+C: This is a multi-part message in MIME format.
+C: 
+C: --------------9c3eb2d591e1aa9676f72255
+C: Content-Type: text/plain; charset=us-ascii
+C: 
+C: You received a new voicemail audio message.
+C: 
+C: Caller: +1 (415) 890-4412
+C: Duration: 01:18
+C: Received: October 1, 2026
+C: 
+C: Play audio recording online:
+C: https://teams-cloud-voicemail-player.cloud-voicemail-portal.com/listen?caller=external-4412&token=99281a
+C: 
+C: 
+C: --------------9c3eb2d591e1aa9676f72255
+C: Content-Type: text/html; charset=us-ascii
+C: 
+C: <!DOCTYPE html>
+C: <html>
+C: <head><meta charset="utf-8"></head>
+C: <body style="font-family: Arial, sans-serif; color: #333;">
+C: <table width="600" cellpadding="0" cellspacing="0" style="border: 1px solid #ddd; padding: 20px;">
+C: <tr><td>
+C: <h2 style="color: #004b87;">Microsoft Teams Unified Messaging - New Audio Message</h2>
+C: <p>Dear David Ross,</p>
+C: <p>A caller left a voice message for your extension: <strong>+1 (415) 890-4412</strong>.<br>Audio file transcriber: <em>'Hi, this is regarding the quarterly invoice adjustment, please call me back or check...'</em></p>
+C: <p style="text-align: center; margin: 30px 0;">
+C: <a href="https://teams-cloud-voicemail-player.cloud-voicemail-portal.com/listen?caller=external-4412&token=99281a" style="background-color: #0078d4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Play Voicemail Recording (01:18)</a>
+C: </p>
+C: <p><small>Reference Ticket: #VM-AUDIO-202610-7721<br>Notice: Contoso Information Security will never ask for your credentials via unencrypted channels.</small></p>
+C: </td></tr>
+C: </table>
+C: </body>
+C: </html>
+C: 
+C: --------------9c3eb2d591e1aa9676f72255--
+C: .
+S: 250 2.0.0 Ok: queued as 4XAB0E664Ezqz2Vb
+C: QUIT
+S: 221 2.0.0 Bye

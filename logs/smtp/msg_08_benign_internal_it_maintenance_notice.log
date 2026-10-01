@@ -1,0 +1,120 @@
+# ==============================================================================
+# INBOUND SMTP GATEWAY LOG (mailgw01.contoso.com)
+# Message Index: 08 | Theme: Internal IT Maintenance Notice: Weekend VPN Gateway Upgrade
+# Classification: BENIGN
+# Gateway Ingress Public IP: 198.145.89.25 / Gateway Egress Public IP: 198.145.89.26
+# Sender IP: 10.0.10.51 (mailgw01.contoso.com[10.0.10.51])
+# Sender: "Contoso IT Infrastructure Operations" <it-ops@contoso.com>
+# Recipient: "James Miller" <jmiller@contoso.com>
+# Queue ID: 4X331F63FBzqz2Vb | Relay Target: BN8NAM11FT029.mail.protection.outlook.com [104.47.74.35]:25
+# ==============================================================================
+
+# --- SECTION 1: POSTFIX / MTA SESSION LOGS (SYSLOG RFC 3164) ---
+
+2026-10-01T07:20:19.100Z mailgw01.contoso.com postfix/smtpd[48210]: connect from mailgw01.contoso.com[10.0.10.51]
+2026-10-01T07:20:19.412Z mailgw01.contoso.com postfix/smtpd[48210]: Anonymous TLS connection established from mailgw01.contoso.com[10.0.10.51]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+2026-10-01T07:20:19.784Z mailgw01.contoso.com postfix/policyd-spf[48218]: prepend Received-SPF: Pass (mailgw01.contoso.com: domain of it-ops@contoso.com designates 10.0.10.51 as permitted sender) identity=mailfrom; client-ip=10.0.10.51; helo=mailgw01.contoso.com;
+2026-10-01T07:20:19.850Z mailgw01.contoso.com postfix/opendkim[1104]: 4X331F63FBzqz2Vb: DKIM signature verified: d=contoso.com
+2026-10-01T07:20:20.114Z mailgw01.contoso.com postfix/smtpd[48210]: 4X331F63FBzqz2Vb: client=mailgw01.contoso.com[10.0.10.51]
+2026-10-01T07:20:20.420Z mailgw01.contoso.com postfix/cleanup[48215]: 4X331F63FBzqz2Vb: message-id=<d11fc8c0297ca4fff75d599f6b2d5b09@contoso.com>
+2026-10-01T07:20:20.680Z mailgw01.contoso.com postfix/mailfilter[48220]: 4X331F63FBzqz2Vb: Antivirus=CLEAN SpamCheck=CLEAN Score=0.0/5.0 Action=TAG_HEADER
+2026-10-01T07:20:20.850Z mailgw01.contoso.com postfix/qmgr[2814]: 4X331F63FBzqz2Vb: from=<it-ops@contoso.com>, size=7396, nrcpt=1 (queue active)
+2026-10-01T07:20:21.714Z mailgw01.contoso.com postfix/smtp[48225]: 4X331F63FBzqz2Vb: to=<jmiller@contoso.com>, relay=contoso-com.mail.protection.outlook.com[104.47.74.35]:25, delay=1.6, delays=1.2/0.01/0.15/0.28, dsn=2.6.0, status=sent (250 2.6.0 <d11fc8c0297ca4fff75d599f6b2d5b09@contoso.com> [InternalId=156908330480, Hostname=SJ0PR03MB7491.namprd03.prod.outlook.com] 7778 bytes in 0.281s, 27.031 KB/sec Queued mail for delivery)
+2026-10-01T07:20:21.754Z mailgw01.contoso.com postfix/qmgr[2814]: 4X331F63FBzqz2Vb: removed
+2026-10-01T07:20:21.824Z mailgw01.contoso.com postfix/smtpd[48210]: disconnect from mailgw01.contoso.com[10.0.10.51] ehlo=2 starttls=1 mail=1 rcpt=1 data=1 quit=1 commands=7
+
+
+# --- SECTION 2: RAW SMTP SESSION CAPTURE (mailgw01 INGRESS INTERFACE) ---
+
+[SESSION ID: 4X331F63FBzqz2Vb]
+[PEER: 10.0.10.51:48214 -> 198.145.89.25:25]
+[TIME: 2026-10-01T07:20:19.100Z]
+
+S: 220 mailgw01.contoso.com ESMTP Postfix (Ubuntu)
+C: EHLO mailgw01.contoso.com
+S: 250-mailgw01.contoso.com
+S: 250-PIPELINING
+S: 250-SIZE 52428800
+S: 250-VRFY
+S: 250-ETRN
+S: 250-STARTTLS
+S: 250-ENHANCEDSTATUSCODES
+S: 250-8BITMIME
+S: 250-DSN
+S: 250-SMTPUTF8
+S: 250 CHUNKING
+C: STARTTLS
+S: 220 2.0.0 Ready to start TLS
+[--- TLSv1.3 Handshake Completed: TLS_AES_256_GCM_SHA384 ---]
+C: EHLO mailgw01.contoso.com
+S: 250-mailgw01.contoso.com
+S: 250-PIPELINING
+S: 250-SIZE 52428800
+S: 250-VRFY
+S: 250-ETRN
+S: 250-ENHANCEDSTATUSCODES
+S: 250-8BITMIME
+S: 250-DSN
+S: 250-SMTPUTF8
+S: 250 CHUNKING
+C: MAIL FROM:<it-ops@contoso.com>
+S: 250 2.1.0 Ok
+C: RCPT TO:<jmiller@contoso.com>
+S: 250 2.1.5 Ok
+C: DATA
+S: 354 End data with <CR><LF>.<CR><LF>
+C: Received: from mailgw01.contoso.com (localhost [127.0.0.1])
+C: 	by mailgw01.contoso.com with ESMTP id 97079AD4
+C: 	for <jmiller@contoso.com>; Thu, 01 Oct 2026 07:20:18 +0000
+C: Date: Thu, 01 Oct 2026 07:20:18 +0000
+C: To: "James Miller" <jmiller@contoso.com>
+C: From: "Contoso IT Infrastructure Operations" <it-ops@contoso.com>
+C: Reply-To: IT Helpdesk <helpdesk@contoso.com>
+C: Subject: Scheduled Network Maintenance: Corporate VPN Gateway Upgrade on Saturday
+C: Message-ID: <d11fc8c0297ca4fff75d599f6b2d5b09@contoso.com>
+C: X-Mailer: Microsoft Exchange Server 2019 (15.2.9123.18)
+C: MIME-Version: 1.0
+C: Content-Type: multipart/alternative;
+C: 	boundary="------------d11fc8c0297ca4fff75d599f"
+C: Content-Transfer-Encoding: 8bit
+C: 
+C: This is a multi-part message in MIME format.
+C: 
+C: --------------d11fc8c0297ca4fff75d599f
+C: Content-Type: text/plain; charset=us-ascii
+C: 
+C: IT Maintenance Window Announcement:
+C: 
+C: The corporate VPN gateways will undergo firmware upgrades this Saturday from 02:00 to 04:00 UTC.
+C: Remote access may be temporarily interrupted during this window.
+C: 
+C: Full details and service status:
+C: https://intranet.contoso.com/it/maintenance-schedule
+C: 
+C: 
+C: --------------d11fc8c0297ca4fff75d599f
+C: Content-Type: text/html; charset=us-ascii
+C: 
+C: <!DOCTYPE html>
+C: <html>
+C: <head><meta charset="utf-8"></head>
+C: <body style="font-family: Arial, sans-serif; color: #333;">
+C: <table width="600" cellpadding="0" cellspacing="0" style="border: 1px solid #ddd; padding: 20px;">
+C: <tr><td>
+C: <h2 style="color: #004b87;">Contoso IT Operations - Infrastructure Notice</h2>
+C: <p>Dear James Miller,</p>
+C: <p>Scheduled network maintenance is planned for the primary VPN gateway clusters on Saturday.<br>If you experience connection drops, please wait until the maintenance window completes.</p>
+C: <p style="text-align: center; margin: 30px 0;">
+C: <a href="https://intranet.contoso.com/it/maintenance-schedule" style="background-color: #0078d4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Check Maintenance Schedule</a>
+C: </p>
+C: <p><small>Reference Ticket: #IT-MAINT-202610-5510<br>Notice: Contoso Information Security will never ask for your credentials via unencrypted channels.</small></p>
+C: </td></tr>
+C: </table>
+C: </body>
+C: </html>
+C: 
+C: --------------d11fc8c0297ca4fff75d599f--
+C: .
+S: 250 2.0.0 Ok: queued as 4X331F63FBzqz2Vb
+C: QUIT
+S: 221 2.0.0 Bye

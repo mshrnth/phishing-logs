@@ -1,0 +1,121 @@
+# ==============================================================================
+# INBOUND SMTP GATEWAY LOG (mailgw01.contoso.com)
+# Message Index: 06 | Theme: Internal Corporate Wellness Program Announcement
+# Classification: BENIGN
+# Gateway Ingress Public IP: 198.145.89.25 / Gateway Egress Public IP: 198.145.89.26
+# Sender IP: 10.0.10.50 (mailgw01.contoso.com[10.0.10.50])
+# Sender: "Contoso HR Communications" <hr-announcements@contoso.com>
+# Recipient: "Robert Taylor" <rtaylor@contoso.com>
+# Queue ID: 4XEA4E3617zqz2Vb | Relay Target: BN8NAM11FT029.mail.protection.outlook.com [104.47.74.35]:25
+# ==============================================================================
+
+# --- SECTION 1: POSTFIX / MTA SESSION LOGS (SYSLOG RFC 3164) ---
+
+2026-10-01T06:04:44.100Z mailgw01.contoso.com postfix/smtpd[48210]: connect from mailgw01.contoso.com[10.0.10.50]
+2026-10-01T06:04:44.412Z mailgw01.contoso.com postfix/smtpd[48210]: Anonymous TLS connection established from mailgw01.contoso.com[10.0.10.50]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+2026-10-01T06:04:44.784Z mailgw01.contoso.com postfix/policyd-spf[48218]: prepend Received-SPF: Pass (mailgw01.contoso.com: domain of hr-announcements@contoso.com designates 10.0.10.50 as permitted sender) identity=mailfrom; client-ip=10.0.10.50; helo=mailgw01.contoso.com;
+2026-10-01T06:04:44.850Z mailgw01.contoso.com postfix/opendkim[1104]: 4XEA4E3617zqz2Vb: DKIM signature verified: d=contoso.com
+2026-10-01T06:04:45.114Z mailgw01.contoso.com postfix/smtpd[48210]: 4XEA4E3617zqz2Vb: client=mailgw01.contoso.com[10.0.10.50]
+2026-10-01T06:04:45.420Z mailgw01.contoso.com postfix/cleanup[48215]: 4XEA4E3617zqz2Vb: message-id=<53f8382b8fb864e4f1738856e25d36eb@contoso.com>
+2026-10-01T06:04:45.680Z mailgw01.contoso.com postfix/mailfilter[48220]: 4XEA4E3617zqz2Vb: Antivirus=CLEAN SpamCheck=CLEAN Score=0.0/5.0 Action=TAG_HEADER
+2026-10-01T06:04:45.850Z mailgw01.contoso.com postfix/qmgr[2814]: 4XEA4E3617zqz2Vb: from=<hr-announcements@contoso.com>, size=7276, nrcpt=1 (queue active)
+2026-10-01T06:04:46.614Z mailgw01.contoso.com postfix/smtp[48225]: 4XEA4E3617zqz2Vb: to=<rtaylor@contoso.com>, relay=contoso-com.mail.protection.outlook.com[104.47.74.35]:25, delay=1.5, delays=1.1/0.01/0.11/0.28, dsn=2.6.0, status=sent (250 2.6.0 <53f8382b8fb864e4f1738856e25d36eb@contoso.com> [InternalId=433723585310, Hostname=SJ0PR03MB7491.namprd03.prod.outlook.com] 7658 bytes in 0.281s, 26.614 KB/sec Queued mail for delivery)
+2026-10-01T06:04:46.654Z mailgw01.contoso.com postfix/qmgr[2814]: 4XEA4E3617zqz2Vb: removed
+2026-10-01T06:04:46.724Z mailgw01.contoso.com postfix/smtpd[48210]: disconnect from mailgw01.contoso.com[10.0.10.50] ehlo=2 starttls=1 mail=1 rcpt=1 data=1 quit=1 commands=7
+
+
+# --- SECTION 2: RAW SMTP SESSION CAPTURE (mailgw01 INGRESS INTERFACE) ---
+
+[SESSION ID: 4XEA4E3617zqz2Vb]
+[PEER: 10.0.10.50:48214 -> 198.145.89.25:25]
+[TIME: 2026-10-01T06:04:44.100Z]
+
+S: 220 mailgw01.contoso.com ESMTP Postfix (Ubuntu)
+C: EHLO mailgw01.contoso.com
+S: 250-mailgw01.contoso.com
+S: 250-PIPELINING
+S: 250-SIZE 52428800
+S: 250-VRFY
+S: 250-ETRN
+S: 250-STARTTLS
+S: 250-ENHANCEDSTATUSCODES
+S: 250-8BITMIME
+S: 250-DSN
+S: 250-SMTPUTF8
+S: 250 CHUNKING
+C: STARTTLS
+S: 220 2.0.0 Ready to start TLS
+[--- TLSv1.3 Handshake Completed: TLS_AES_256_GCM_SHA384 ---]
+C: EHLO mailgw01.contoso.com
+S: 250-mailgw01.contoso.com
+S: 250-PIPELINING
+S: 250-SIZE 52428800
+S: 250-VRFY
+S: 250-ETRN
+S: 250-ENHANCEDSTATUSCODES
+S: 250-8BITMIME
+S: 250-DSN
+S: 250-SMTPUTF8
+S: 250 CHUNKING
+C: MAIL FROM:<hr-announcements@contoso.com>
+S: 250 2.1.0 Ok
+C: RCPT TO:<rtaylor@contoso.com>
+S: 250 2.1.5 Ok
+C: DATA
+S: 354 End data with <CR><LF>.<CR><LF>
+C: Received: from mailgw01.contoso.com (localhost [127.0.0.1])
+C: 	by mailgw01.contoso.com with ESMTP id AE9A9F83
+C: 	for <rtaylor@contoso.com>; Thu, 01 Oct 2026 06:04:43 +0000
+C: Date: Thu, 01 Oct 2026 06:04:43 +0000
+C: To: "Robert Taylor" <rtaylor@contoso.com>
+C: From: "Contoso HR Communications" <hr-announcements@contoso.com>
+C: Reply-To: Employee Benefits Team <benefits@contoso.com>
+C: Subject: Contoso Wellness Program: Annual On-Site Flu Shot Clinic
+C: Message-ID: <53f8382b8fb864e4f1738856e25d36eb@contoso.com>
+C: X-Mailer: Microsoft Exchange Server 2019 (15.2.9123.18)
+C: MIME-Version: 1.0
+C: Content-Type: multipart/alternative;
+C: 	boundary="------------53f8382b8fb864e4f1738856"
+C: Content-Transfer-Encoding: 8bit
+C: 
+C: This is a multi-part message in MIME format.
+C: 
+C: --------------53f8382b8fb864e4f1738856
+C: Content-Type: text/plain; charset=us-ascii
+C: 
+C: Hello Contoso Team,
+C: 
+C: Our annual on-site seasonal wellness clinic will take place October 15-17 in the building 4 auditorium.
+C: Sign up for a timeslot on the intranet:
+C: https://intranet.contoso.com/benefits/flu-shots-2026
+C: 
+C: Stay healthy!
+C: Contoso People Operations
+C: 
+C: 
+C: --------------53f8382b8fb864e4f1738856
+C: Content-Type: text/html; charset=us-ascii
+C: 
+C: <!DOCTYPE html>
+C: <html>
+C: <head><meta charset="utf-8"></head>
+C: <body style="font-family: Arial, sans-serif; color: #333;">
+C: <table width="600" cellpadding="0" cellspacing="0" style="border: 1px solid #ddd; padding: 20px;">
+C: <tr><td>
+C: <h2 style="color: #004b87;">Contoso Wellness - Annual Seasonal Health Clinic</h2>
+C: <p>Dear Robert Taylor,</p>
+C: <p>People Operations is pleased to offer on-site seasonal vaccinations and wellness screenings.<br>Appointments are available Monday through Wednesday from 09:00 to 16:30 in Building 4.</p>
+C: <p style="text-align: center; margin: 30px 0;">
+C: <a href="https://intranet.contoso.com/benefits/flu-shots-2026" style="background-color: #0078d4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Book Clinic Appointment</a>
+C: </p>
+C: <p><small>Reference Ticket: #HR-WELL-202610-1102<br>Notice: Contoso Information Security will never ask for your credentials via unencrypted channels.</small></p>
+C: </td></tr>
+C: </table>
+C: </body>
+C: </html>
+C: 
+C: --------------53f8382b8fb864e4f1738856--
+C: .
+S: 250 2.0.0 Ok: queued as 4XEA4E3617zqz2Vb
+C: QUIT
+S: 221 2.0.0 Bye

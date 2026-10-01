@@ -1,0 +1,122 @@
+# ==============================================================================
+# INBOUND SMTP GATEWAY LOG (mailgw01.contoso.com)
+# Message Index: 07 | Theme: Legitimate Vendor Invoice: Amazon Web Services
+# Classification: BENIGN
+# Gateway Ingress Public IP: 198.145.89.25 / Gateway Egress Public IP: 198.145.89.26
+# Sender IP: 54.240.27.14 (a27-14.smtp-out.amazonses.com[54.240.27.14])
+# Sender: "Amazon Web Services" <no-reply-aws@amazon.com>
+# Recipient: "Lisa Wong" <lwong@contoso.com>
+# Queue ID: 4X832920B7zqz2Vb | Relay Target: BN8NAM11FT029.mail.protection.outlook.com [104.47.74.35]:25
+# ==============================================================================
+
+# --- SECTION 1: POSTFIX / MTA SESSION LOGS (SYSLOG RFC 3164) ---
+
+2026-10-01T06:41:38.100Z mailgw01.contoso.com postfix/smtpd[48210]: connect from a27-14.smtp-out.amazonses.com[54.240.27.14]
+2026-10-01T06:41:38.412Z mailgw01.contoso.com postfix/smtpd[48210]: Anonymous TLS connection established from a27-14.smtp-out.amazonses.com[54.240.27.14]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+2026-10-01T06:41:38.784Z mailgw01.contoso.com postfix/policyd-spf[48218]: prepend Received-SPF: Pass (mailgw01.contoso.com: domain of no-reply-aws@amazon.com designates 54.240.27.14 as permitted sender) identity=mailfrom; client-ip=54.240.27.14; helo=a27-14.smtp-out.amazonses.com;
+2026-10-01T06:41:38.850Z mailgw01.contoso.com postfix/opendkim[1104]: 4X832920B7zqz2Vb: DKIM signature verified: d=amazon.com
+2026-10-01T06:41:39.114Z mailgw01.contoso.com postfix/smtpd[48210]: 4X832920B7zqz2Vb: client=a27-14.smtp-out.amazonses.com[54.240.27.14]
+2026-10-01T06:41:39.420Z mailgw01.contoso.com postfix/cleanup[48215]: 4X832920B7zqz2Vb: message-id=<c143f426372f871a45ee432d6a07f213@amazon.com>
+2026-10-01T06:41:39.680Z mailgw01.contoso.com postfix/mailfilter[48220]: 4X832920B7zqz2Vb: Antivirus=CLEAN SpamCheck=CLEAN Score=0.2/5.0 Action=TAG_HEADER
+2026-10-01T06:41:39.850Z mailgw01.contoso.com postfix/qmgr[2814]: 4X832920B7zqz2Vb: from=<no-reply-aws@amazon.com>, size=7368, nrcpt=1 (queue active)
+2026-10-01T06:41:40.714Z mailgw01.contoso.com postfix/smtp[48225]: 4X832920B7zqz2Vb: to=<lwong@contoso.com>, relay=contoso-com.mail.protection.outlook.com[104.47.74.35]:25, delay=1.6, delays=1.2/0.01/0.13/0.28, dsn=2.6.0, status=sent (250 2.6.0 <c143f426372f871a45ee432d6a07f213@amazon.com> [InternalId=844245876540, Hostname=SJ0PR03MB7491.namprd03.prod.outlook.com] 7750 bytes in 0.281s, 26.934 KB/sec Queued mail for delivery)
+2026-10-01T06:41:40.754Z mailgw01.contoso.com postfix/qmgr[2814]: 4X832920B7zqz2Vb: removed
+2026-10-01T06:41:40.824Z mailgw01.contoso.com postfix/smtpd[48210]: disconnect from a27-14.smtp-out.amazonses.com[54.240.27.14] ehlo=2 starttls=1 mail=1 rcpt=1 data=1 quit=1 commands=7
+
+
+# --- SECTION 2: RAW SMTP SESSION CAPTURE (mailgw01 INGRESS INTERFACE) ---
+
+[SESSION ID: 4X832920B7zqz2Vb]
+[PEER: 54.240.27.14:48214 -> 198.145.89.25:25]
+[TIME: 2026-10-01T06:41:38.100Z]
+
+S: 220 mailgw01.contoso.com ESMTP Postfix (Ubuntu)
+C: EHLO a27-14.smtp-out.amazonses.com
+S: 250-mailgw01.contoso.com
+S: 250-PIPELINING
+S: 250-SIZE 52428800
+S: 250-VRFY
+S: 250-ETRN
+S: 250-STARTTLS
+S: 250-ENHANCEDSTATUSCODES
+S: 250-8BITMIME
+S: 250-DSN
+S: 250-SMTPUTF8
+S: 250 CHUNKING
+C: STARTTLS
+S: 220 2.0.0 Ready to start TLS
+[--- TLSv1.3 Handshake Completed: TLS_AES_256_GCM_SHA384 ---]
+C: EHLO a27-14.smtp-out.amazonses.com
+S: 250-mailgw01.contoso.com
+S: 250-PIPELINING
+S: 250-SIZE 52428800
+S: 250-VRFY
+S: 250-ETRN
+S: 250-ENHANCEDSTATUSCODES
+S: 250-8BITMIME
+S: 250-DSN
+S: 250-SMTPUTF8
+S: 250 CHUNKING
+C: MAIL FROM:<no-reply-aws@amazon.com>
+S: 250 2.1.0 Ok
+C: RCPT TO:<lwong@contoso.com>
+S: 250 2.1.5 Ok
+C: DATA
+S: 354 End data with <CR><LF>.<CR><LF>
+C: Received: from a27-14.smtp-out.amazonses.com (localhost [127.0.0.1])
+C: 	by a27-14.smtp-out.amazonses.com with ESMTP id 8129CEC7
+C: 	for <lwong@contoso.com>; Thu, 01 Oct 2026 06:41:37 +0000
+C: Date: Thu, 01 Oct 2026 06:41:37 +0000
+C: To: "Lisa Wong" <lwong@contoso.com>
+C: From: "Amazon Web Services" <no-reply-aws@amazon.com>
+C: Reply-To: AWS Billing Support <aws-billing@amazon.com>
+C: Subject: Amazon Web Services Monthly Invoice #99812401 - Contoso Production Account
+C: Message-ID: <c143f426372f871a45ee432d6a07f213@amazon.com>
+C: X-Mailer: Amazon SES mailer 2.1
+C: MIME-Version: 1.0
+C: Content-Type: multipart/alternative;
+C: 	boundary="------------c143f426372f871a45ee432d"
+C: Content-Transfer-Encoding: 8bit
+C: 
+C: This is a multi-part message in MIME format.
+C: 
+C: --------------c143f426372f871a45ee432d
+C: Content-Type: text/plain; charset=us-ascii
+C: 
+C: Amazon Web Services Invoice Summary:
+C: 
+C: Account: Contoso Production (9928-1092-4412)
+C: Invoice: #99812401
+C: Billing Period: September 1, 2026 - September 30, 2026
+C: Amount Due: $14,281.40 USD
+C: 
+C: View full statement in the AWS Billing Console:
+C: https://console.aws.amazon.com/billing/home?#/bills?invoiceId=99812401
+C: 
+C: 
+C: --------------c143f426372f871a45ee432d
+C: Content-Type: text/html; charset=us-ascii
+C: 
+C: <!DOCTYPE html>
+C: <html>
+C: <head><meta charset="utf-8"></head>
+C: <body style="font-family: Arial, sans-serif; color: #333;">
+C: <table width="600" cellpadding="0" cellspacing="0" style="border: 1px solid #ddd; padding: 20px;">
+C: <tr><td>
+C: <h2 style="color: #004b87;">Amazon Web Services - Invoice Available</h2>
+C: <p>Dear Lisa Wong,</p>
+C: <p>Your monthly statement for <strong>Contoso Production Account (9928-1092-4412)</strong> is now ready.<br>Automatic payment will be processed according to your payment method on file.</p>
+C: <p style="text-align: center; margin: 30px 0;">
+C: <a href="https://console.aws.amazon.com/billing/home?#/bills?invoiceId=99812401" style="background-color: #0078d4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">View Invoice Details</a>
+C: </p>
+C: <p><small>Reference Ticket: #AWS-INV-202610-9981<br>Notice: Contoso Information Security will never ask for your credentials via unencrypted channels.</small></p>
+C: </td></tr>
+C: </table>
+C: </body>
+C: </html>
+C: 
+C: --------------c143f426372f871a45ee432d--
+C: .
+S: 250 2.0.0 Ok: queued as 4X832920B7zqz2Vb
+C: QUIT
+S: 221 2.0.0 Bye

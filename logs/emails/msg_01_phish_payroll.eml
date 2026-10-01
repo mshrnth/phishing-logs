@@ -1,0 +1,112 @@
+Received: from SJ0PR03MB7491.namprd03.prod.outlook.com (2603:10b6:408:149::19)
+ by BL0PR03MB4812.namprd03.prod.outlook.com with HTTPS; Thu, 01 Oct 2026 02:50:43 +0000
+Received: from BN0PR03CA0041.namprd03.prod.outlook.com (2603:10b6:408:44::16)
+ by SJ0PR03MB7491.namprd03.prod.outlook.com (2603:10b6:408:149::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9123.18; Thu, 01 Oct 2026 02:50:43 +0000
+Received: from BN8NAM11FT029.mail.protection.outlook.com
+ (2603:10b6:408:44:cafe::94) by BN0PR03CA0041.outlook.office365.com
+ (2603:10b6:408:44::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9123.14 via Frontend
+ Transport; Thu, 01 Oct 2026 02:50:43 +0000
+Authentication-Results: spf=softfail (sender IP is 185.196.220.44)
+ smtp.mailfrom=payroll-notifications-cloud.net; dkim=none
+ header.d=none; dmarc=fail action=none
+ compauth=fail reason=001
+Received: from mailgw01.contoso.com (198.145.89.26) by
+ BN8NAM11FT029.mail.protection.outlook.com (104.47.74.35) with Microsoft SMTP
+ Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9123.11 via
+ Frontend Transport; Thu, 01 Oct 2026 02:50:42 +0000
+X-Gateway-Scanned: mailgw01.contoso.com on 2026-10-01_02:50:42
+X-Gateway-Spam-Status: No, score=3.9 required=5.0
+X-Gateway-Spam-Score: 3.9
+Received-SPF: SoftFail (mailgw01.contoso.com: domain of transitioning
+ notifications@payroll-notifications-cloud.net does not designate 185.196.220.44 as
+ permitted sender) identity=mailfrom; client-ip=185.196.220.44;
+ helo=mail.payroll-notifications-cloud.net;
+ envelope-from=notifications@payroll-notifications-cloud.net; receiver=jdoe@contoso.com
+Received: from mail.payroll-notifications-cloud.net (unknown [185.196.220.44])
+ by mailgw01.contoso.com (Postfix) with ESMTPS id 4X3EB13B90zqz2Vb
+ for <jdoe@contoso.com>; Thu, 01 Oct 2026 02:50:40 +0000
+Received: from mail.payroll-notifications-cloud.net (localhost [127.0.0.1])
+	by mail.payroll-notifications-cloud.net with ESMTP id B3B1799D
+	for <jdoe@contoso.com>; Thu, 01 Oct 2026 02:50:39 +0000
+Date: Thu, 01 Oct 2026 02:50:39 +0000
+To: "Jane Doe" <jdoe@contoso.com>
+From: "Contoso HR & Payroll" <notifications@payroll-notifications-cloud.net>
+Reply-To: Direct Deposit Support <payroll-update@payroll-notifications-cloud.net>
+Subject: [EXTERNAL] Urgent: Mandatory Verification of Direct Deposit Allocation
+Message-ID: <46685257bdd640fb06671ad11c80317f@payroll-notifications-cloud.net>
+X-Priority: 1
+Priority: Urgent
+Importance: High
+X-MSMail-Priority: High
+X-Mailer: PHPMailer 6.8.0 (https://github.com/PHPMailer/PHPMailer)
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="b1_46685257bdd640fb06671ad11c80317f"
+Content-Transfer-Encoding: 8bit
+X-External-Sender: YES
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Organization-MessageDirectionality: Inbound
+X-MS-Exchange-Organization-AuthSource: mailgw01.contoso.com
+X-MS-Exchange-Organization-AuthAs: Anonymous
+X-MS-Exchange-Organization-Network-Message-Id: 1a3d1fa7-bc89-60a9-23b8-c1e9392456de
+X-MS-Exchange-Organization-Rules-ExecutionHistory: RuleId:4a81bc77-9811-4fa2-bc42-90e8a7192834;RuleName:Allowlist - Third Party HR Systems;Action:SetSCL;RuleId:c19b4502-3901-4aa2-8710-1845bb094a11;RuleName:External Sender Warning;Action:PrependSubject,AddHeader;
+X-MS-Exchange-Organization-SCL: -1
+X-MS-Exchange-Organization-PCL: 2
+X-Forefront-Antispam-Report: CIP:185.196.220.44;CTRY:US;LANG:en;SCL:-1;SRV:DIR;IPV:CAL;SFV:SKN;H:mailgw01.contoso.com;PTR:mailgw01.contoso.com;CAT:PHSH;SFS:(136003)(396003);DIR:INB;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|46104249079;
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2026 02:50:42.4100 (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-Id: 7b81c2f4-610b-419b-a3d8-e1b93d45c802
+X-MS-Exchange-Transport-EndToEndLatency: 00:00:00.6800000
+X-MS-Exchange-Processed-By-BccFoldering: 15.20.9123.018
+X-Microsoft-Antispam-Mailbox-Delivery:
+ ucf:0;jmr:0;auth:0;dest:I;ENG:(910001)(944506478)(944626604)(920097)(930097)(140003);
+X-Microsoft-Antispam-Message-Info:
+ EA8vb3cNZdZw5Y4DUdiujk9urDQvwjG3sIcW6z/BKJa5YiMXdJQodzPCjui6U721
+ a4gkV31T7MKKcKYcdRChzYkhbKFs/8rqSYdHfobbzLlwRvwuGDhOUdggxcPvgAU6
+ iK45lt5Q6AGGWzaYZU6/UgCl+gk5uZ16HXsoK/gjQEHzVIfYbGafzL/g5z1+cyCt
+ CnVwAyQedSIQqSR5jvhtQ/J88tBhMDHctdjS7xsyH86tN39i
+
+This is a multi-part message in MIME format.
+
+--b1_46685257bdd640fb06671ad11c80317f
+Content-Type: text/plain; charset=us-ascii
+
+Dear Jane Doe,
+
+A change request was submitted for your Contoso Direct Deposit payment instructions on October 1, 2026.
+
+If you did not authorize this modification, please review and verify your banking profile immediately by visiting:
+https://contoso-portal-directdeposit.auth-service-verify.com/auth/login?id=jdoe-9921
+
+This link will expire within 24 hours.
+
+Regards,
+Contoso HR & Compensation Services
+
+
+--b1_46685257bdd640fb06671ad11c80317f
+Content-Type: text/html; charset=us-ascii
+
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="font-family: Arial, sans-serif; color: #333;">
+<table width="600" cellpadding="0" cellspacing="0" style="border: 1px solid #ddd; padding: 20px;">
+<tr><td>
+<h2 style="color: #004b87;">Contoso Corporate Portal - Action Required</h2>
+<p>Dear Jane Doe,</p>
+<p>A change request was submitted for your <strong>Direct Deposit Payment Account</strong> on October 1, 2026.<br>If this was not requested by you, please review and reject the pending changes immediately to prevent misrouted disbursement.</p>
+<p style="text-align: center; margin: 30px 0;">
+<a href="https://contoso-portal-directdeposit.auth-service-verify.com/auth/login?id=jdoe-9921" style="background-color: #0078d4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Review Direct Deposit Profile</a>
+</p>
+<p><small>Reference Ticket: #DD-202610-88190<br>Notice: Contoso Information Security will never ask for your credentials via unencrypted channels.</small></p>
+</td></tr>
+</table>
+</body>
+</html>
+
+--b1_46685257bdd640fb06671ad11c80317f--

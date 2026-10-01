@@ -1,0 +1,126 @@
+# ==============================================================================
+# INBOUND SMTP GATEWAY LOG (mailgw01.contoso.com)
+# Message Index: 05 | Theme: SharePoint / OneDrive Encrypted Financial Spreadsheet Share
+# Classification: PHISHING
+# Gateway Ingress Public IP: 198.145.89.25 / Gateway Egress Public IP: 198.145.89.26
+# Sender IP: 45.142.214.77 (unknown[45.142.214.77])
+# Sender: "Contoso Internal Document Sharing" <sharepoint-admin@sharepoint-docs-vault.net>
+# Recipient: "Emily Watson" <ewatson@contoso.com>
+# Queue ID: 4XB2C08394zqz2Vb | Relay Target: BN8NAM11FT029.mail.protection.outlook.com [104.47.74.35]:25
+# ==============================================================================
+
+# --- SECTION 1: POSTFIX / MTA SESSION LOGS (SYSLOG RFC 3164) ---
+
+2026-10-01T05:26:07.100Z mailgw01.contoso.com postfix/smtpd[48210]: connect from unknown[45.142.214.77]
+2026-10-01T05:26:07.225Z mailgw01.contoso.com postfix/smtpd[48210]: warning: hostname cust-node214.dedicated-pool.org does not resolve to address 45.142.214.77: Name or service not known
+2026-10-01T05:26:07.412Z mailgw01.contoso.com postfix/smtpd[48210]: Anonymous TLS connection established from unknown[45.142.214.77]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+2026-10-01T05:26:07.784Z mailgw01.contoso.com postfix/policyd-spf[48218]: prepend Received-SPF: SoftFail (mailgw01.contoso.com: domain of transitioning sharepoint-admin@sharepoint-docs-vault.net does not designate 45.142.214.77 as permitted sender) identity=mailfrom; client-ip=45.142.214.77; helo=cloudrelay.sharepoint-docs-vault.net; envelope-from=sharepoint-admin@sharepoint-docs-vault.net; receiver=ewatson@contoso.com
+2026-10-01T05:26:07.850Z mailgw01.contoso.com postfix/opendkim[1104]: 4XB2C08394zqz2Vb: no signature data found for domain sharepoint-docs-vault.net
+2026-10-01T05:26:07.920Z mailgw01.contoso.com postfix/dmarc-filter[1180]: 4XB2C08394zqz2Vb: dmarc-result=fail (p=none sp=none pct=100) reason="SPF failed, DKIM missing" domain=sharepoint-docs-vault.net
+2026-10-01T05:26:08.114Z mailgw01.contoso.com postfix/smtpd[48210]: 4XB2C08394zqz2Vb: client=unknown[45.142.214.77]
+2026-10-01T05:26:08.420Z mailgw01.contoso.com postfix/cleanup[48215]: 4XB2C08394zqz2Vb: message-id=<e17f29e17028604649bc473fed7bf656@sharepoint-docs-vault.net>
+2026-10-01T05:26:08.680Z mailgw01.contoso.com postfix/mailfilter[48220]: 4XB2C08394zqz2Vb: Antivirus=CLEAN SpamCheck=SUSPICIOUS Score=3.7/5.0 Action=TAG_HEADER
+2026-10-01T05:26:08.850Z mailgw01.contoso.com postfix/qmgr[2814]: 4XB2C08394zqz2Vb: from=<sharepoint-admin@sharepoint-docs-vault.net>, size=7217, nrcpt=1 (queue active)
+2026-10-01T05:26:09.614Z mailgw01.contoso.com postfix/smtp[48225]: 4XB2C08394zqz2Vb: to=<ewatson@contoso.com>, relay=contoso-com.mail.protection.outlook.com[104.47.74.35]:25, delay=1.5, delays=1.1/0.01/0.13/0.28, dsn=2.6.0, status=sent (250 2.6.0 <e17f29e17028604649bc473fed7bf656@sharepoint-docs-vault.net> [InternalId=768425855938, Hostname=SJ0PR03MB7491.namprd03.prod.outlook.com] 7599 bytes in 0.281s, 26.409 KB/sec Queued mail for delivery)
+2026-10-01T05:26:09.654Z mailgw01.contoso.com postfix/qmgr[2814]: 4XB2C08394zqz2Vb: removed
+2026-10-01T05:26:09.724Z mailgw01.contoso.com postfix/smtpd[48210]: disconnect from unknown[45.142.214.77] ehlo=2 starttls=1 mail=1 rcpt=1 data=1 quit=1 commands=7
+
+
+# --- SECTION 2: RAW SMTP SESSION CAPTURE (mailgw01 INGRESS INTERFACE) ---
+
+[SESSION ID: 4XB2C08394zqz2Vb]
+[PEER: 45.142.214.77:48214 -> 198.145.89.25:25]
+[TIME: 2026-10-01T05:26:07.100Z]
+
+S: 220 mailgw01.contoso.com ESMTP Postfix (Ubuntu)
+C: EHLO cloudrelay.sharepoint-docs-vault.net
+S: 250-mailgw01.contoso.com
+S: 250-PIPELINING
+S: 250-SIZE 52428800
+S: 250-VRFY
+S: 250-ETRN
+S: 250-STARTTLS
+S: 250-ENHANCEDSTATUSCODES
+S: 250-8BITMIME
+S: 250-DSN
+S: 250-SMTPUTF8
+S: 250 CHUNKING
+C: STARTTLS
+S: 220 2.0.0 Ready to start TLS
+[--- TLSv1.3 Handshake Completed: TLS_AES_256_GCM_SHA384 ---]
+C: EHLO cloudrelay.sharepoint-docs-vault.net
+S: 250-mailgw01.contoso.com
+S: 250-PIPELINING
+S: 250-SIZE 52428800
+S: 250-VRFY
+S: 250-ETRN
+S: 250-ENHANCEDSTATUSCODES
+S: 250-8BITMIME
+S: 250-DSN
+S: 250-SMTPUTF8
+S: 250 CHUNKING
+C: MAIL FROM:<sharepoint-admin@sharepoint-docs-vault.net>
+S: 250 2.1.0 Ok
+C: RCPT TO:<ewatson@contoso.com>
+S: 250 2.1.5 Ok
+C: DATA
+S: 354 End data with <CR><LF>.<CR><LF>
+C: Received: from cloudrelay.sharepoint-docs-vault.net (localhost [127.0.0.1])
+C: 	by cloudrelay.sharepoint-docs-vault.net with ESMTP id 318A1536
+C: 	for <ewatson@contoso.com>; Thu, 01 Oct 2026 05:26:06 +0000
+C: Date: Thu, 01 Oct 2026 05:26:06 +0000
+C: To: "Emily Watson" <ewatson@contoso.com>
+C: From: "Contoso Internal Document Sharing" <sharepoint-admin@sharepoint-docs-vault.net>
+C: Reply-To: Corporate File Operations <fileshare@sharepoint-docs-vault.net>
+C: Subject: Shared Document: "Contoso_Q3_Bonus_Allocations_Confidential.xlsx"
+C: Message-ID: <e17f29e17028604649bc473fed7bf656@sharepoint-docs-vault.net>
+C: X-Priority: 1
+C: Priority: Urgent
+C: Importance: High
+C: X-MSMail-Priority: High
+C: X-Mailer: PHPMailer 6.8.1 (https://github.com/PHPMailer/PHPMailer)
+C: MIME-Version: 1.0
+C: Content-Type: multipart/alternative;
+C: 	boundary="b1_e17f29e17028604649bc473fed7bf656"
+C: Content-Transfer-Encoding: 8bit
+C: 
+C: This is a multi-part message in MIME format.
+C: 
+C: --b1_e17f29e17028604649bc473fed7bf656
+C: Content-Type: text/plain; charset=us-ascii
+C: 
+C: SharePoint Online Notification:
+C: 
+C: Contoso Internal Document Sharing shared a file with you:
+C: "Contoso_Q3_Bonus_Allocations_Confidential.xlsx"
+C: 
+C: Open file in browser:
+C: https://contoso-sharepoint-docs.sharepoint-docs-vault.net/view?doc=bonus_alloc_q3&auth=ewatson
+C: 
+C: 
+C: --b1_e17f29e17028604649bc473fed7bf656
+C: Content-Type: text/html; charset=us-ascii
+C: 
+C: <!DOCTYPE html>
+C: <html>
+C: <head><meta charset="utf-8"></head>
+C: <body style="font-family: Arial, sans-serif; color: #333;">
+C: <table width="600" cellpadding="0" cellspacing="0" style="border: 1px solid #ddd; padding: 20px;">
+C: <tr><td>
+C: <h2 style="color: #004b87;">SharePoint Online - Encrypted Spreadsheet Shared</h2>
+C: <p>Dear Emily Watson,</p>
+C: <p>A confidential spreadsheet was shared with you: <strong>Contoso_Q3_Bonus_Allocations_Confidential.xlsx</strong>.<br>This link requires single sign-on verification to open.</p>
+C: <p style="text-align: center; margin: 30px 0;">
+C: <a href="https://contoso-sharepoint-docs.sharepoint-docs-vault.net/view?doc=bonus_alloc_q3&auth=ewatson" style="background-color: #0078d4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Open Document in Excel Online</a>
+C: </p>
+C: <p><small>Reference Ticket: #SP-SHARE-202610-4491<br>Notice: Contoso Information Security will never ask for your credentials via unencrypted channels.</small></p>
+C: </td></tr>
+C: </table>
+C: </body>
+C: </html>
+C: 
+C: --b1_e17f29e17028604649bc473fed7bf656--
+C: .
+S: 250 2.0.0 Ok: queued as 4XB2C08394zqz2Vb
+C: QUIT
+S: 221 2.0.0 Bye

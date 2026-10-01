@@ -1,0 +1,108 @@
+Received: from SJ0PR03MB7491.namprd03.prod.outlook.com (2603:10b6:408:149::19)
+ by BL0PR03MB4812.namprd03.prod.outlook.com with HTTPS; Thu, 01 Oct 2026 05:26:10 +0000
+Received: from BN0PR03CA0041.namprd03.prod.outlook.com (2603:10b6:408:44::16)
+ by SJ0PR03MB7491.namprd03.prod.outlook.com (2603:10b6:408:149::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9123.18; Thu, 01 Oct 2026 05:26:10 +0000
+Received: from BN8NAM11FT029.mail.protection.outlook.com
+ (2603:10b6:408:44:cafe::94) by BN0PR03CA0041.outlook.office365.com
+ (2603:10b6:408:44::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9123.14 via Frontend
+ Transport; Thu, 01 Oct 2026 05:26:10 +0000
+Authentication-Results: spf=softfail (sender IP is 45.142.214.77)
+ smtp.mailfrom=sharepoint-docs-vault.net; dkim=none
+ header.d=none; dmarc=fail action=none
+ compauth=fail reason=001
+Received: from mailgw01.contoso.com (198.145.89.26) by
+ BN8NAM11FT029.mail.protection.outlook.com (104.47.74.35) with Microsoft SMTP
+ Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9123.11 via
+ Frontend Transport; Thu, 01 Oct 2026 05:26:09 +0000
+X-Gateway-Scanned: mailgw01.contoso.com on 2026-10-01_05:26:09
+X-Gateway-Spam-Status: No, score=3.7 required=5.0
+X-Gateway-Spam-Score: 3.7
+Received-SPF: SoftFail (mailgw01.contoso.com: domain of transitioning
+ sharepoint-admin@sharepoint-docs-vault.net does not designate 45.142.214.77 as
+ permitted sender) identity=mailfrom; client-ip=45.142.214.77;
+ helo=cloudrelay.sharepoint-docs-vault.net;
+ envelope-from=sharepoint-admin@sharepoint-docs-vault.net; receiver=ewatson@contoso.com
+Received: from cloudrelay.sharepoint-docs-vault.net (unknown [45.142.214.77])
+ by mailgw01.contoso.com (Postfix) with ESMTPS id 4XB2C08394zqz2Vb
+ for <ewatson@contoso.com>; Thu, 01 Oct 2026 05:26:07 +0000
+Received: from cloudrelay.sharepoint-docs-vault.net (localhost [127.0.0.1])
+	by cloudrelay.sharepoint-docs-vault.net with ESMTP id 318A1536
+	for <ewatson@contoso.com>; Thu, 01 Oct 2026 05:26:06 +0000
+Date: Thu, 01 Oct 2026 05:26:06 +0000
+To: "Emily Watson" <ewatson@contoso.com>
+From: "Contoso Internal Document Sharing" <sharepoint-admin@sharepoint-docs-vault.net>
+Reply-To: Corporate File Operations <fileshare@sharepoint-docs-vault.net>
+Subject: [EXTERNAL] Shared Document: "Contoso_Q3_Bonus_Allocations_Confidential.xlsx"
+Message-ID: <e17f29e17028604649bc473fed7bf656@sharepoint-docs-vault.net>
+X-Priority: 1
+Priority: Urgent
+Importance: High
+X-MSMail-Priority: High
+X-Mailer: PHPMailer 6.8.1 (https://github.com/PHPMailer/PHPMailer)
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="b1_e17f29e17028604649bc473fed7bf656"
+Content-Transfer-Encoding: 8bit
+X-External-Sender: YES
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Organization-MessageDirectionality: Inbound
+X-MS-Exchange-Organization-AuthSource: mailgw01.contoso.com
+X-MS-Exchange-Organization-AuthAs: Anonymous
+X-MS-Exchange-Organization-Network-Message-Id: f920264c-0763-fcd0-1f15-c7b67c16128d
+X-MS-Exchange-Organization-Rules-ExecutionHistory: RuleId:89b7201c-33aa-4488-b710-aa9182736450;RuleName:Allowlist - Executive Shared Repositories;Action:SetSCL;RuleId:c19b4502-3901-4aa2-8710-1845bb094a11;RuleName:External Sender Warning;Action:PrependSubject,AddHeader;
+X-MS-Exchange-Organization-SCL: -1
+X-MS-Exchange-Organization-PCL: 2
+X-Forefront-Antispam-Report: CIP:45.142.214.77;CTRY:US;LANG:en;SCL:-1;SRV:DIR;IPV:CAL;SFV:SKN;H:mailgw01.contoso.com;PTR:mailgw01.contoso.com;CAT:PHSH;SFS:(136003)(396003);DIR:INB;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|46104249079;
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2026 05:26:09.4100 (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-Id: 7b81c2f4-610b-419b-a3d8-e1b93d45c802
+X-MS-Exchange-Transport-EndToEndLatency: 00:00:00.6800000
+X-MS-Exchange-Processed-By-BccFoldering: 15.20.9123.018
+X-Microsoft-Antispam-Mailbox-Delivery:
+ ucf:0;jmr:0;auth:0;dest:I;ENG:(910001)(944506478)(944626604)(920097)(930097)(140003);
+X-Microsoft-Antispam-Message-Info:
+ B9AvczrsPE7/lYvU9/F86UrEYUUjjdSuiAGQmPpM5PewqsHppGB6xHfSFqLyw8VN
+ /RJAqTPhM+kHSdFPJvCHrcspqMKi+RIjeJN0Lt4yM+NVmQ4XphyWt7/cSn3SXFdZ
+ KMN7/kl27ILrggTuk1Al4rCZ2YDpmmXE9zZ5w7eXlwvKjAQZ/pJ1tHBhgEYxFJ7h
+ EbpDLpen1FlmQ7uLVIP2l6067yZIc8u7LsoHhz/ovIbDvjd3
+
+This is a multi-part message in MIME format.
+
+--b1_e17f29e17028604649bc473fed7bf656
+Content-Type: text/plain; charset=us-ascii
+
+SharePoint Online Notification:
+
+Contoso Internal Document Sharing shared a file with you:
+"Contoso_Q3_Bonus_Allocations_Confidential.xlsx"
+
+Open file in browser:
+https://contoso-sharepoint-docs.sharepoint-docs-vault.net/view?doc=bonus_alloc_q3&auth=ewatson
+
+
+--b1_e17f29e17028604649bc473fed7bf656
+Content-Type: text/html; charset=us-ascii
+
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="font-family: Arial, sans-serif; color: #333;">
+<table width="600" cellpadding="0" cellspacing="0" style="border: 1px solid #ddd; padding: 20px;">
+<tr><td>
+<h2 style="color: #004b87;">SharePoint Online - Encrypted Spreadsheet Shared</h2>
+<p>Dear Emily Watson,</p>
+<p>A confidential spreadsheet was shared with you: <strong>Contoso_Q3_Bonus_Allocations_Confidential.xlsx</strong>.<br>This link requires single sign-on verification to open.</p>
+<p style="text-align: center; margin: 30px 0;">
+<a href="https://contoso-sharepoint-docs.sharepoint-docs-vault.net/view?doc=bonus_alloc_q3&auth=ewatson" style="background-color: #0078d4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Open Document in Excel Online</a>
+</p>
+<p><small>Reference Ticket: #SP-SHARE-202610-4491<br>Notice: Contoso Information Security will never ask for your credentials via unencrypted channels.</small></p>
+</td></tr>
+</table>
+</body>
+</html>
+
+--b1_e17f29e17028604649bc473fed7bf656--

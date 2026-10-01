@@ -1,0 +1,101 @@
+Received: from SJ0PR03MB7491.namprd03.prod.outlook.com (2603:10b6:408:149::19)
+ by BL0PR03MB4812.namprd03.prod.outlook.com with HTTPS; Thu, 01 Oct 2026 07:20:22 +0000
+Received: from BN0PR03CA0041.namprd03.prod.outlook.com (2603:10b6:408:44::16)
+ by SJ0PR03MB7491.namprd03.prod.outlook.com (2603:10b6:408:149::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9123.18; Thu, 01 Oct 2026 07:20:22 +0000
+Received: from BN8NAM11FT029.mail.protection.outlook.com
+ (2603:10b6:408:44:cafe::94) by BN0PR03CA0041.outlook.office365.com
+ (2603:10b6:408:44::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9123.14 via Frontend
+ Transport; Thu, 01 Oct 2026 07:20:22 +0000
+Authentication-Results: spf=pass (sender IP is 10.0.10.51)
+ smtp.mailfrom=contoso.com; dkim=pass
+ header.d=contoso.com; dmarc=pass
+ compauth=pass reason=100
+Received: from mailgw01.contoso.com (198.145.89.26) by
+ BN8NAM11FT029.mail.protection.outlook.com (104.47.74.35) with Microsoft SMTP
+ Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9123.11 via
+ Frontend Transport; Thu, 01 Oct 2026 07:20:21 +0000
+X-Gateway-Scanned: mailgw01.contoso.com on 2026-10-01_07:20:21
+X-Gateway-Spam-Status: No, score=0.0 required=5.0
+X-Gateway-Spam-Score: 0.0
+Received-SPF: Pass (mailgw01.contoso.com: domain of it-ops@contoso.com
+ designates 10.0.10.51 as permitted sender) identity=mailfrom;
+ client-ip=10.0.10.51; helo=mailgw01.contoso.com;
+Received: from mailgw01.contoso.com (mailgw01.contoso.com [10.0.10.51])
+ by mailgw01.contoso.com (Postfix) with ESMTP id 4X331F63FBzqz2Vb
+ for <jmiller@contoso.com>; Thu, 01 Oct 2026 07:20:19 +0000
+Received: from mailgw01.contoso.com (localhost [127.0.0.1])
+	by mailgw01.contoso.com with ESMTP id 97079AD4
+	for <jmiller@contoso.com>; Thu, 01 Oct 2026 07:20:18 +0000
+Date: Thu, 01 Oct 2026 07:20:18 +0000
+To: "James Miller" <jmiller@contoso.com>
+From: "Contoso IT Infrastructure Operations" <it-ops@contoso.com>
+Reply-To: IT Helpdesk <helpdesk@contoso.com>
+Subject: Scheduled Network Maintenance: Corporate VPN Gateway Upgrade on Saturday
+Message-ID: <d11fc8c0297ca4fff75d599f6b2d5b09@contoso.com>
+X-Mailer: Microsoft Exchange Server 2019 (15.2.9123.18)
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="------------d11fc8c0297ca4fff75d599f"
+Content-Transfer-Encoding: 8bit
+X-External-Sender: NO
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Organization-MessageDirectionality: Inbound
+X-MS-Exchange-Organization-AuthSource: mailgw01.contoso.com
+X-MS-Exchange-Organization-AuthAs: Internal
+X-MS-Exchange-Organization-Network-Message-Id: df7d0dd7-236e-1608-9acb-394acd1f5318
+X-MS-Exchange-Organization-SCL: -1
+X-MS-Exchange-Organization-PCL: 2
+X-Forefront-Antispam-Report: CIP:10.0.10.51;CTRY:US;LANG:en;SCL:-1;SRV:DIR;IPV:CAL;SFV:NSPM;H:mailgw01.contoso.com;PTR:mailgw01.contoso.com;CAT:NONE;SFS:(136003)(396003);DIR:INB;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|46104249079;
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2026 07:20:21.4100 (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-Id: 7b81c2f4-610b-419b-a3d8-e1b93d45c802
+X-MS-Exchange-Transport-EndToEndLatency: 00:00:00.6800000
+X-MS-Exchange-Processed-By-BccFoldering: 15.20.9123.018
+X-Microsoft-Antispam-Mailbox-Delivery:
+ ucf:0;jmr:0;auth:0;dest:I;ENG:(910001)(944506478)(944626604)(920097)(930097)(140003);
+X-Microsoft-Antispam-Message-Info:
+ ND+RKlKL5kvfLnHmsg3UG8q/eMUpv3IOozKrSkYTkvFH8OUCKAmDbkzYOJN5mj4Y
+ etbqIDj/CHtJldsAtHvVXyu4IgrH8BbGv4EItiKwezWqRBa0rVnt9V1FIOoSlmcW
+ ZhWhnsvygRJhkrYYqYs/vN/M4cWtX/7+vIgq2SjcXJakNCinl5zk2lXjs+QVtN6M
+ HSbPulEPSeARQCJ4u7nEEE7mvb7jJ0a7y6COfzoNX//GPIaF
+
+This is a multi-part message in MIME format.
+
+--------------d11fc8c0297ca4fff75d599f
+Content-Type: text/plain; charset=us-ascii
+
+IT Maintenance Window Announcement:
+
+The corporate VPN gateways will undergo firmware upgrades this Saturday from 02:00 to 04:00 UTC.
+Remote access may be temporarily interrupted during this window.
+
+Full details and service status:
+https://intranet.contoso.com/it/maintenance-schedule
+
+
+--------------d11fc8c0297ca4fff75d599f
+Content-Type: text/html; charset=us-ascii
+
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="font-family: Arial, sans-serif; color: #333;">
+<table width="600" cellpadding="0" cellspacing="0" style="border: 1px solid #ddd; padding: 20px;">
+<tr><td>
+<h2 style="color: #004b87;">Contoso IT Operations - Infrastructure Notice</h2>
+<p>Dear James Miller,</p>
+<p>Scheduled network maintenance is planned for the primary VPN gateway clusters on Saturday.<br>If you experience connection drops, please wait until the maintenance window completes.</p>
+<p style="text-align: center; margin: 30px 0;">
+<a href="https://intranet.contoso.com/it/maintenance-schedule" style="background-color: #0078d4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Check Maintenance Schedule</a>
+</p>
+<p><small>Reference Ticket: #IT-MAINT-202610-5510<br>Notice: Contoso Information Security will never ask for your credentials via unencrypted channels.</small></p>
+</td></tr>
+</table>
+</body>
+</html>
+
+--------------d11fc8c0297ca4fff75d599f--

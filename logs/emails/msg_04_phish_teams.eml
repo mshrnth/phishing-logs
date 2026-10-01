@@ -1,0 +1,105 @@
+Received: from SJ0PR03MB7491.namprd03.prod.outlook.com (2603:10b6:408:149::19)
+ by BL0PR03MB4812.namprd03.prod.outlook.com with HTTPS; Thu, 01 Oct 2026 04:45:44 +0000
+Received: from BN0PR03CA0041.namprd03.prod.outlook.com (2603:10b6:408:44::16)
+ by SJ0PR03MB7491.namprd03.prod.outlook.com (2603:10b6:408:149::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9123.18; Thu, 01 Oct 2026 04:45:44 +0000
+Received: from BN8NAM11FT029.mail.protection.outlook.com
+ (2603:10b6:408:44:cafe::94) by BN0PR03CA0041.outlook.office365.com
+ (2603:10b6:408:44::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9123.14 via Frontend
+ Transport; Thu, 01 Oct 2026 04:45:44 +0000
+Authentication-Results: spf=softfail (sender IP is 193.106.191.22)
+ smtp.mailfrom=cloud-voicemail-portal.com; dkim=none
+ header.d=none; dmarc=fail action=none
+ compauth=fail reason=001
+Received: from mailgw01.contoso.com (198.145.89.26) by
+ BN8NAM11FT029.mail.protection.outlook.com (104.47.74.35) with Microsoft SMTP
+ Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9123.11 via
+ Frontend Transport; Thu, 01 Oct 2026 04:45:43 +0000
+X-Gateway-Scanned: mailgw01.contoso.com on 2026-10-01_04:45:43
+X-Gateway-Spam-Status: No, score=2.8 required=5.0
+X-Gateway-Spam-Score: 2.8
+Received-SPF: SoftFail (mailgw01.contoso.com: domain of transitioning
+ noreply-voicemail@cloud-voicemail-portal.com does not designate 193.106.191.22 as
+ permitted sender) identity=mailfrom; client-ip=193.106.191.22;
+ helo=pbx01.cloud-voicemail-portal.com;
+ envelope-from=noreply-voicemail@cloud-voicemail-portal.com; receiver=dross@contoso.com
+Received: from pbx01.cloud-voicemail-portal.com (unknown [193.106.191.22])
+ by mailgw01.contoso.com (Postfix) with ESMTPS id 4XAB0E664Ezqz2Vb
+ for <dross@contoso.com>; Thu, 01 Oct 2026 04:45:41 +0000
+Received: from pbx01.cloud-voicemail-portal.com (localhost [127.0.0.1])
+	by pbx01.cloud-voicemail-portal.com with ESMTP id 4E6DD58B
+	for <dross@contoso.com>; Thu, 01 Oct 2026 04:45:40 +0000
+Date: Thu, 01 Oct 2026 04:45:40 +0000
+To: "David Ross" <dross@contoso.com>
+From: "Microsoft Teams Voicemail Service" <noreply-voicemail@cloud-voicemail-portal.com>
+Reply-To: Unified Messaging Support <support@cloud-voicemail-portal.com>
+Subject: [EXTERNAL] New Audio Voicemail from +1 (415) 890-4412 (1m 18s) - Listen Online
+Message-ID: <9c3eb2d591e1aa9676f72255c01f36bf@cloud-voicemail-portal.com>
+X-Mailer: Postfix with Python-smtplib
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="------------9c3eb2d591e1aa9676f72255"
+Content-Transfer-Encoding: 8bit
+X-External-Sender: YES
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Organization-MessageDirectionality: Inbound
+X-MS-Exchange-Organization-AuthSource: mailgw01.contoso.com
+X-MS-Exchange-Organization-AuthAs: Anonymous
+X-MS-Exchange-Organization-Network-Message-Id: 7e8adee7-0758-e201-561e-16d16105716b
+X-MS-Exchange-Organization-Rules-ExecutionHistory: RuleId:c19b4502-3901-4aa2-8710-1845bb094a11;RuleName:External Sender Warning;Action:PrependSubject,AddHeader;
+X-MS-Exchange-Organization-SCL: 1
+X-MS-Exchange-Organization-PCL: 2
+X-Forefront-Antispam-Report: CIP:193.106.191.22;CTRY:US;LANG:en;SCL:1;SRV:DIR;IPV:CAL;SFV:NSPM;H:mailgw01.contoso.com;PTR:mailgw01.contoso.com;CAT:NONE;SFS:(136003)(396003);DIR:INB;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|46104249079;
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2026 04:45:43.4100 (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-Id: 7b81c2f4-610b-419b-a3d8-e1b93d45c802
+X-MS-Exchange-Transport-EndToEndLatency: 00:00:00.6800000
+X-MS-Exchange-Processed-By-BccFoldering: 15.20.9123.018
+X-Microsoft-Antispam-Mailbox-Delivery:
+ ucf:0;jmr:0;auth:0;dest:I;ENG:(910001)(944506478)(944626604)(920097)(930097)(140003);
+X-Microsoft-Antispam-Message-Info:
+ ro+NBWEre9D6e/P75QgvlnHPfJy88rDZqbToipyAdj1ioT1eYm73jZAzY5d0uFua
+ B0CMFxuVQPs0BpHw9eGuXhqB9DohzfslG01Mmyt/PNVzwubimNucHjJqbIcpUHpY
+ JlAB0ebwlRB2k5DoJHeHZdk6c0yISCQeVJ2T4D/vm86L/OApFN2lgA0udQqJFFnw
+ 4o5c3/su8LLRqqQ1UqjS/ZPNEugtoYGlO84A7NMbYLn/4hpo
+
+This is a multi-part message in MIME format.
+
+--------------9c3eb2d591e1aa9676f72255
+Content-Type: text/plain; charset=us-ascii
+
+You received a new voicemail audio message.
+
+Caller: +1 (415) 890-4412
+Duration: 01:18
+Received: October 1, 2026
+
+Play audio recording online:
+https://teams-cloud-voicemail-player.cloud-voicemail-portal.com/listen?caller=external-4412&token=99281a
+
+
+--------------9c3eb2d591e1aa9676f72255
+Content-Type: text/html; charset=us-ascii
+
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="font-family: Arial, sans-serif; color: #333;">
+<table width="600" cellpadding="0" cellspacing="0" style="border: 1px solid #ddd; padding: 20px;">
+<tr><td>
+<h2 style="color: #004b87;">Microsoft Teams Unified Messaging - New Audio Message</h2>
+<p>Dear David Ross,</p>
+<p>A caller left a voice message for your extension: <strong>+1 (415) 890-4412</strong>.<br>Audio file transcriber: <em>'Hi, this is regarding the quarterly invoice adjustment, please call me back or check...'</em></p>
+<p style="text-align: center; margin: 30px 0;">
+<a href="https://teams-cloud-voicemail-player.cloud-voicemail-portal.com/listen?caller=external-4412&token=99281a" style="background-color: #0078d4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Play Voicemail Recording (01:18)</a>
+</p>
+<p><small>Reference Ticket: #VM-AUDIO-202610-7721<br>Notice: Contoso Information Security will never ask for your credentials via unencrypted channels.</small></p>
+</td></tr>
+</table>
+</body>
+</html>
+
+--------------9c3eb2d591e1aa9676f72255--
