@@ -1,0 +1,126 @@
+# ==============================================================================
+# INBOUND SMTP GATEWAY LOGS (mailgw01.contoso.com)
+# Scenario 2: Microsoft 365 Password Expiration / AiTM Credential Phish (Pre-User Interaction Stage)
+# Gateway Ingress Public IP: 198.145.89.25 / Gateway Egress Public IP: 198.145.89.26
+# Originating Attacker IP: 91.240.118.82 (Attacker VPS, rDNS failed / non-resolving)
+# Claimed Sender: "Contoso IT Helpdesk" <no-reply@security-update-tenant365.com>
+# Target Recipient: Michael Chen <mchen@contoso.com>
+# Relay Target: contoso-com.mail.protection.outlook.com [104.47.74.35]:25
+# ==============================================================================
+
+# --- SECTION 1: POSTFIX / MTA SYSTEM & SESSION LOGS (SYSLOG RFC 5424) ---
+
+2026-10-01T03:12:15.810Z mailgw01.contoso.com postfix/smtpd[48210]: connect from unknown[91.240.118.82]
+2026-10-01T03:12:15.925Z mailgw01.contoso.com postfix/smtpd[48210]: warning: hostname srv-node82.hostnoc-cloud.com does not resolve to address 91.240.118.82: Name or service not known
+2026-10-01T03:12:16.012Z mailgw01.contoso.com postfix/smtpd[48210]: Anonymous TLS connection established from unknown[91.240.118.82]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+2026-10-01T03:12:16.114Z mailgw01.contoso.com postfix/smtpd[48210]: 4XAD7F4C82zqz2Vb: client=unknown[91.240.118.82]
+2026-10-01T03:12:16.420Z mailgw01.contoso.com postfix/cleanup[48215]: 4XAD7F4C82zqz2Vb: message-id=<1de960e17480dcdb4bfeb5e1f542a0af@security-update-tenant365.com>
+2026-10-01T03:12:16.612Z mailgw01.contoso.com opendkim[1104]: 4XAD7F4C82zqz2Vb: no signature data found for domain security-update-tenant365.com
+2026-10-01T03:12:16.784Z mailgw01.contoso.com policyd-spf[48218]: prepend Received-SPF: SoftFail (mailgw01.contoso.com: domain of transitioning no-reply@security-update-tenant365.com does not designate 91.240.118.82 as permitted sender) identity=mailfrom; client-ip=91.240.118.82; helo=relay.security-update-tenant365.com; envelope-from=no-reply@security-update-tenant365.com; receiver=mchen@contoso.com
+2026-10-01T03:12:16.850Z mailgw01.contoso.com dmarc-filter[1180]: 4XAD7F4C82zqz2Vb: dmarc-result=fail (p=none sp=none pct=100) reason="SPF failed, DKIM missing" domain=security-update-tenant365.com
+2026-10-01T03:12:17.032Z mailgw01.contoso.com mailfilter[48220]: 4XAD7F4C82zqz2Vb: Antivirus=CLEAN SpamCheck=SUSPICIOUS Score=2.4/5.0 RuleHits=HTML_MESSAGE,SUSP_URL_KEYWORD,SPF_SOFTFAIL,NO_DKIM,URGENT_SUBJECT Action=TAG_HEADER
+2026-10-01T03:12:17.210Z mailgw01.contoso.com postfix/qmgr[2814]: 4XAD7F4C82zqz2Vb: from=<no-reply@security-update-tenant365.com>, size=6998, nrcpt=1 (queue active)
+2026-10-01T03:12:17.410Z mailgw01.contoso.com postfix/smtp[48225]: 4XAD7F4C82zqz2Vb: to=<mchen@contoso.com>, relay=contoso-com.mail.protection.outlook.com[104.47.74.35]:25, delay=1.6, delays=1.1/0.01/0.12/0.37, dsn=2.6.0, status=sent (250 2.6.0 <1de960e17480dcdb4bfeb5e1f542a0af@security-update-tenant365.com> [InternalId=399977716206, Hostname=SJ0PR03MB7491.namprd03.prod.outlook.com] 7380 bytes in 0.281s, 24.772 KB/sec Queued mail for delivery)
+2026-10-01T03:12:17.450Z mailgw01.contoso.com postfix/qmgr[2814]: 4XAD7F4C82zqz2Vb: removed
+2026-10-01T03:12:17.520Z mailgw01.contoso.com postfix/smtpd[48210]: disconnect from unknown[91.240.118.82] ehlo=2 starttls=1 mail=1 rcpt=1 data=1 quit=1 commands=7
+
+
+# --- SECTION 2: RAW SMTP SESSION CAPTURE (mailgw01 INGRESS INTERFACE) ---
+
+[SESSION ID: 4XAD7F4C82zqz2Vb]
+[PEER: 91.240.118.82:48214 -> 198.145.89.25:25]
+[TIME: 2026-10-01T03:12:15.810Z]
+
+S: 220 mailgw01.contoso.com ESMTP Postfix (Ubuntu)
+C: EHLO relay.security-update-tenant365.com
+S: 250-mailgw01.contoso.com
+S: 250-PIPELINING
+S: 250-SIZE 52428800
+S: 250-VRFY
+S: 250-ETRN
+S: 250-STARTTLS
+S: 250-ENHANCEDSTATUSCODES
+S: 250-8BITMIME
+S: 250-DSN
+S: 250-SMTPUTF8
+S: 250 CHUNKING
+C: STARTTLS
+S: 220 2.0.0 Ready to start TLS
+[--- TLSv1.3 Handshake Completed: TLS_AES_256_GCM_SHA384 ---]
+C: EHLO relay.security-update-tenant365.com
+S: 250-mailgw01.contoso.com
+S: 250-PIPELINING
+S: 250-SIZE 52428800
+S: 250-VRFY
+S: 250-ETRN
+S: 250-ENHANCEDSTATUSCODES
+S: 250-8BITMIME
+S: 250-DSN
+S: 250-SMTPUTF8
+S: 250 CHUNKING
+C: MAIL FROM:<no-reply@security-update-tenant365.com>
+S: 250 2.1.0 Ok
+C: RCPT TO:<mchen@contoso.com>
+S: 250 2.1.5 Ok
+C: DATA
+S: 354 End data with <CR><LF>.<CR><LF>
+C: Received: from relay.security-update-tenant365.com (localhost [127.0.0.1])
+C: 	by relay.security-update-tenant365.com (Postfix) with ESMTP id 3fa89b12
+C: 	for <mchen@contoso.com>; Thu, 01 Oct 2026 03:12:14 +0000
+C: Date: Thu, 01 Oct 2026 03:12:14 +0000
+C: To: <mchen@contoso.com>
+C: From: "Contoso IT Helpdesk" <no-reply@security-update-tenant365.com>
+C: Reply-To: IT Identity Operations <helpdesk-identity@security-update-tenant365.com>
+C: Subject: Immediate Notice: Password Expiration for mchen@contoso.com
+C: Message-ID: <1de960e17480dcdb4bfeb5e1f542a0af@security-update-tenant365.com>
+C: X-Priority: 1
+C: X-Mailer: Roundcube Webmail/1.5.3
+C: MIME-Version: 1.0
+C: Content-Type: multipart/alternative;
+C: 	boundary="b1_1de960e17480dcdb4bfeb5e1f542a0af"
+C: Content-Transfer-Encoding: 8bit
+C: 
+C: This is a multi-part message in MIME format.
+C: 
+C: --b1_1de960e17480dcdb4bfeb5e1f542a0af
+C: Content-Type: text/plain; charset=us-ascii
+C: 
+C: Dear Michael Chen,
+C: 
+C: A critical security or account notification was dispatched for your profile on October 1, 2026.
+C: 
+C: Immediate action is required to maintain system access and verify credentials:
+C: https://login.microsoftonline.contoso-auth-verify.com/common/oauth2/v2.0/authorize?user=mchen%40contoso.com
+C: 
+C: This link will expire within 24 hours.
+C: 
+C: Regards,
+C: Corporate Support Services
+C: 
+C: --b1_1de960e17480dcdb4bfeb5e1f542a0af
+C: Content-Type: text/html; charset=us-ascii
+C: 
+C: <!DOCTYPE html>
+C: <html>
+C: <head><meta charset="utf-8"></head>
+C: <body style="font-family: Arial, sans-serif; color: #333;">
+C: <table width="600" cellpadding="0" cellspacing="0" style="border: 1px solid #ddd; padding: 20px;">
+C: <tr><td>
+C: <h2 style="color: #004b87;">Contoso Identity Management - Password Expiry</h2>
+C: <p>Dear Michael Chen,</p>
+C: <p>A mandatory security action is pending for your account profile: <strong>mchen@contoso.com</strong>.</p>
+C: <p>Please confirm and authenticate through the secure corporate proxy below:</p>
+C: <p style="text-align: center; margin: 30px 0;">
+C: <a href="https://login.microsoftonline.contoso-auth-verify.com/common/oauth2/v2.0/authorize?user=mchen%40contoso.com" style="background-color: #0078d4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Keep Current Password & Re-Authenticate</a>
+C: </p>
+C: <p><small>Reference Ticket: #IT-SEC-202610-3341<br>Security Notice: Contoso Information Security will never ask for your password via plaintext email.</small></p>
+C: </td></tr>
+C: </table>
+C: </body>
+C: </html>
+C: 
+C: --b1_1de960e17480dcdb4bfeb5e1f542a0af--
+C: .
+S: 250 2.0.0 Ok: queued as 4XAD7F4C82zqz2Vb
+C: QUIT
+S: 221 2.0.0 Bye

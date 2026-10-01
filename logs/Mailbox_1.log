@@ -1,0 +1,273 @@
+# ==============================================================================
+# MICROSOFT 365 / EXCHANGE ONLINE & OUTLOOK MAILBOX AUDIT LOGS
+# Scenario 1: Payroll / Direct Deposit Credential Harvesting (Pre-User Interaction State)
+# Target Mailbox: jdoe@contoso.com (Jane Doe - Financial Analyst)
+# Mailbox Location: Exchange Online (Tenant ID: 7b81c2f4-610b-419b-a3d8-e1b93d45c802)
+# Incident Stage: Item Delivered to Inbox; User has NOT read, clicked, or interacted
+# Status: Unread (IsRead = False), No URL Click, No Attachment Download
+# ==============================================================================
+
+
+# ------------------------------------------------------------------------------
+# SECTION 1: EXCHANGE ONLINE MESSAGE TRACE DETAIL (Get-MessageTraceDetail)
+# ------------------------------------------------------------------------------
+
+MessageTraceId        : 3b4f61e2-a53e-43cb-bdf5-b8b2d8f00678
+MessageId             : <d58d3858cf01f3ec94754adbdbdd1a5b@payroll-notifications-cloud.net>
+Received              : 2026-10-01T02:45:09.410Z
+SenderAddress         : notifications@payroll-notifications-cloud.net
+RecipientAddress      : jdoe@contoso.com
+Subject               : [EXTERNAL] Urgent: Mandatory Verification of Direct Deposit Allocation
+Status                : Delivered
+ToIP                  : 10.240.18.62 (Mailbox Database Store)
+FromIP                : 198.145.89.26 (mailgw01.contoso.com Public Egress)
+Size                  : 7252
+Direction             : Inbound
+
+Events:
+[
+  {
+    "Date": "2026-10-01T02:45:09.412Z",
+    "Event": "Receive",
+    "Action": "Message received by connector BN8NAM11FT029.mail.protection.outlook.com from 198.145.89.26",
+    "Detail": "Inbound session established over TLS 1.3."
+  },
+  {
+    "Date": "2026-10-01T02:45:09.680Z",
+    "Event": "Transport rule",
+    "Action": "Rule 'Allowlist - Third Party HR Systems' matched",
+    "Detail": "Set spam confidence level (SCL) to -1 and bypassed spam filtering (SFV:SKN) due to rule condition: Sender domain matches 'payroll-*'."
+  },
+  {
+    "Date": "2026-10-01T02:45:09.790Z",
+    "Event": "Transport rule",
+    "Action": "Rule 'External Sender Warning' matched",
+    "Detail": "Prepended '[EXTERNAL] ' to message subject and added external sender metadata header."
+  },
+  {
+    "Date": "2026-10-01T02:45:10.090Z",
+    "Event": "Deliver",
+    "Action": "Delivered to mailbox",
+    "Detail": "The message was successfully delivered to the mailbox 'jdoe@contoso.com' in folder 'Inbox'. InternalMessageId: 535631646733."
+  }
+]
+
+
+# ------------------------------------------------------------------------------
+# SECTION 2: DEFENDER XDR (ADVANCED HUNTING) & PURVIEW AUDIT TELEMETRY
+# (KQL query results confirming pre-interaction state at 2026-10-01T02:45:10.090Z)
+# ------------------------------------------------------------------------------
+
+# Query: EmailEvents | where NetworkMessageId == "3b4f61e2-a53e-43cb-bdf5-b8b2d8f00678"
+{
+  "Timestamp": "2026-10-01T02:45:10.090Z",
+  "NetworkMessageId": "3b4f61e2-a53e-43cb-bdf5-b8b2d8f00678",
+  "InternetMessageId": "<d58d3858cf01f3ec94754adbdbdd1a5b@payroll-notifications-cloud.net>",
+  "SenderMailFromAddress": "notifications@payroll-notifications-cloud.net",
+  "SenderFromAddress": "notifications@payroll-notifications-cloud.net",
+  "SenderDisplayName": "Contoso HR & Payroll",
+  "RecipientEmailAddress": "jdoe@contoso.com",
+  "Subject": "[EXTERNAL] Urgent: Mandatory Verification of Direct Deposit Allocation",
+  "DeliveryAction": "Delivered",
+  "DeliveryLocation": "Inbox",
+  "EmailDirection": "Inbound",
+  "SenderIPv4": "185.196.220.44",
+  "AuthenticationDetails": "{\"SPF\": \"softfail\", \"DKIM\": \"none\", \"DMARC\": \"fail\"}",
+  "ThreatTypes": "Phish",
+  "ThreatNames": "URL-Reputation",
+  "DetectionMethods": "URL analysis",
+  "EmailLanguage": "en",
+  "OrgLevelAction": "Allow",
+  "OrgLevelPolicy": "TransportRule",
+  "UserLevelAction": "None",
+  "UserLevelPolicy": "None"
+}
+
+# Query: UrlClickEvents | where NetworkMessageId == "3b4f61e2-a53e-43cb-bdf5-b8b2d8f00678"
+# Result: 0 records found. (No SafeLinks click events registered)
+
+# Query: EmailPostDeliveryEvents | where NetworkMessageId == "3b4f61e2-a53e-43cb-bdf5-b8b2d8f00678"
+# Result: 0 records found. (No ZAP, quarantine release, or user-reported phish events yet)
+
+# Query: Search-UnifiedAuditLog -RecordType ExchangeItem -Operations MailItemsAccessed -FreeText "3b4f61e2-a53e-43cb-bdf5-b8b2d8f00678"
+# Result: 0 records found. (Mailbox owner jdoe@contoso.com has NOT opened/read or accessed the item)
+
+
+# ------------------------------------------------------------------------------
+# SECTION 3: OUTLOOK MAPI / GRAPH API MESSAGE OBJECT (INBOX ITEM STATE)
+# ------------------------------------------------------------------------------
+
+GET https://graph.microsoft.com/v1.0/users/jdoe@contoso.com/messages/AAMkADhkOWM2YTZmLTllYmItNDkyNC1hZGI0LWVhOTg0OTM2OGQ3MQBGAAAAAAB40cbd20a90fb4f8f36ab804a5930765b49e98...
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{
+  "id": "AAMkADhkOWM2YTZmLTllYmItNDkyNC1hZGI0LWVhOTg0OTM2OGQ3MQBGAAAAAAB40cbd20a90fb4f8f36ab804a5930765b49e98...",
+  "createdDateTime": "2026-10-01T02:45:10Z",
+  "lastModifiedDateTime": "2026-10-01T02:45:10Z",
+  "receivedDateTime": "2026-10-01T02:45:10Z",
+  "sentDateTime": "2026-10-01T02:45:06Z",
+  "hasAttachments": false,
+  "internetMessageId": "<d58d3858cf01f3ec94754adbdbdd1a5b@payroll-notifications-cloud.net>",
+  "subject": "[EXTERNAL] Urgent: Mandatory Verification of Direct Deposit Allocation",
+  "importance": "high",
+  "parentFolderId": "AQMkADhkOWM2YTZmLTllYmItNDkyNC1hZGI0LWVhOTg0OTM2OGQ3MQAuAAADeGfT9clnNUmtu...",
+  "conversationId": "AAQkADhkOWM2YTZmLTllYmItNDkyNC1hZGI0LWVhOTg0OTM2OGQ3MQAQAMX...",
+  "isRead": false,
+  "isDraft": false,
+  "webLink": "https://outlook.office365.com/owa/?ItemID=AAMkADhkOWM2YTZmLTllYmItNDkyNC1hZGI0LWVhOTg0OTM2OGQ3MQBGAAAAAAB40cbd20a90fb4f8f36ab804a5930765b49e98...",
+  "inferenceClassification": "other",
+  "sender": {
+    "emailAddress": {
+      "name": "Contoso HR & Payroll",
+      "address": "notifications@payroll-notifications-cloud.net"
+    }
+  },
+  "from": {
+    "emailAddress": {
+      "name": "Contoso HR & Payroll",
+      "address": "notifications@payroll-notifications-cloud.net"
+    }
+  },
+  "toRecipients": [
+    {
+      "emailAddress": {
+        "name": "Jane Doe",
+        "address": "jdoe@contoso.com"
+      }
+    }
+  ],
+  "replyTo": [
+    {
+      "emailAddress": {
+        "name": "Direct Deposit Support",
+        "address": "payroll-update@payroll-notifications-cloud.net"
+      }
+    }
+  ],
+  "flag": {
+    "flagStatus": "notFlagged"
+  }
+}
+
+
+# ------------------------------------------------------------------------------
+# SECTION 4: COMPLETE RFC 822 / OUTLOOK INTERNET MESSAGE HEADERS
+# (Extracted via Outlook Desktop: File -> Properties -> Internet headers,
+#  or OWA: Message Details)
+# ------------------------------------------------------------------------------
+
+Received: from SJ0PR03MB7491.namprd03.prod.outlook.com (2603:10b6:408:149::19)
+ by BL0PR03MB4812.namprd03.prod.outlook.com with HTTPS; Thu, 01 Oct 2026 02:45:10 +0000
+Received: from BN0PR03CA0041.namprd03.prod.outlook.com (2603:10b6:408:44::16)
+ by SJ0PR03MB7491.namprd03.prod.outlook.com (2603:10b6:408:149::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9123.18; Thu, 01 Oct 2026 02:45:10 +0000
+Received: from BN8NAM11FT029.mail.protection.outlook.com
+ (2603:10b6:408:44:cafe::94) by BN0PR03CA0041.outlook.office365.com
+ (2603:10b6:408:44::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9123.14 via Frontend
+ Transport; Thu, 01 Oct 2026 02:45:10 +0000
+Authentication-Results: spf=softfail (sender IP is 185.196.220.44)
+ smtp.mailfrom=payroll-notifications-cloud.net; dkim=none (message not signed)
+ header.d=none; dmarc=fail action=none
+ header.from=payroll-notifications-cloud.net; compauth=fail reason=001
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ payroll-notifications-cloud.net discourages use of 185.196.220.44 as permitted sender)
+Received: from mailgw01.contoso.com (198.145.89.26) by
+ BN8NAM11FT029.mail.protection.outlook.com (104.47.74.35) with Microsoft SMTP
+ Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9123.11 via
+ Frontend Transport; Thu, 01 Oct 2026 02:45:09 +0000
+X-Gateway-Scanned: mailgw01.contoso.com on 2026-10-01_02:45:09
+X-Gateway-Spam-Status: No, score=3.9 required=5.0 tests=HTML_MESSAGE,SPF_SOFTFAIL,NO_DKIM,URGENT_SUBJECT,SUSP_URL_KEYWORD autolearn=no
+X-Gateway-Spam-Score: 3.9
+Received-SPF: SoftFail (mailgw01.contoso.com: domain of transitioning
+ notifications@payroll-notifications-cloud.net does not designate 185.196.220.44 as
+ permitted sender) identity=mailfrom; client-ip=185.196.220.44;
+ helo=mail.payroll-notifications-cloud.net;
+ envelope-from=notifications@payroll-notifications-cloud.net; receiver=jdoe@contoso.com
+Received: from mail.payroll-notifications-cloud.net (unknown [185.196.220.44])
+ by mailgw01.contoso.com (Postfix) with ESMTPS id 4X6C72482Czqz2Vb
+ for <jdoe@contoso.com>; Thu, 01 Oct 2026 02:45:07 +0000
+Received: from mail.payroll-notifications-cloud.net (localhost [127.0.0.1])
+	by mail.payroll-notifications-cloud.net (Postfix) with ESMTP id 3fa89b12
+	for <jdoe@contoso.com>; Thu, 01 Oct 2026 02:45:06 +0000
+Date: Thu, 01 Oct 2026 02:45:06 +0000
+To: <jdoe@contoso.com>
+From: "Contoso HR & Payroll" <notifications@payroll-notifications-cloud.net>
+Reply-To: Direct Deposit Support <payroll-update@payroll-notifications-cloud.net>
+Subject: [EXTERNAL] Urgent: Mandatory Verification of Direct Deposit Allocation
+Message-ID: <d58d3858cf01f3ec94754adbdbdd1a5b@payroll-notifications-cloud.net>
+X-Priority: 1
+X-Mailer: PHPMailer 6.8.0 (https://github.com/PHPMailer/PHPMailer)
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="b1_d58d3858cf01f3ec94754adbdbdd1a5b"
+Content-Transfer-Encoding: 8bit
+Importance: High
+X-MSMail-Priority: High
+X-External-Sender: YES
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Organization-MessageDirectionality: Inbound
+X-MS-Exchange-Organization-AuthSource: mailgw01.contoso.com
+X-MS-Exchange-Organization-AuthAs: Anonymous
+X-MS-Exchange-Organization-Network-Message-Id: 3b4f61e2-a53e-43cb-bdf5-b8b2d8f00678
+X-MS-Exchange-Organization-Rules-ExecutionHistory: RuleId:4a81bc77-9811-4fa2-bc42-90e8a7192834;RuleName:Allowlist - Third Party HR Systems;Action:SetSCL;
+X-MS-Exchange-Organization-SCL: -1
+X-MS-Exchange-Organization-PCL: 2
+X-Forefront-Antispam-Report: CIP:198.145.89.26;CTRY:US;LANG:en;SCL:-1;SRV:DIR;IPV:CAL;SFV:SKN;H:mailgw01.contoso.com;PTR:mailgw01.contoso.com;CAT:PHSH;SFS:(136003)(396003)(366004)(346002)(376002);DIR:INB;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|46104249079|82310400026|36860700013|440099029;
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2026 02:45:09.4100 (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-Id: 7b81c2f4-610b-419b-a3d8-e1b93d45c802
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-EndToEndLatency: 00:00:00.6800000
+X-MS-Exchange-Processed-By-BccFoldering: 15.20.9123.018
+X-Microsoft-Antispam-Mailbox-Delivery:
+ ucf:0;jmr:0;auth:0;dest:I;ENG:(910001)(944506478)(944626604)(920097)(930097)(140003);
+X-Microsoft-Antispam-Message-Info:
+ dkLOeQySw4+MsFj6IiurK4N1Ya1EqfR8y4nZ5CgmyqXGsW33o7xtBgkkhThBDrGp
+ VZi51b1KRo37G2zu2/wWgE8kQIYDGNVyY1Xvze3XQjQcJue2UZjLWUkEVzrOCD2q
+ 5F9I3UblqeNaUmkro1n60u9BghdYyTwaYktCUQekl8VLC4bxq5gSS8GZwGh6bKUq
+ VIYhi2qt/OGliLPj9/OJ79EymL+4GXVGdT7mmrnYYh0fObXofdoc/GO76UewPGZu
+
+This is a multi-part message in MIME format.
+
+--b1_d58d3858cf01f3ec94754adbdbdd1a5b
+Content-Type: text/plain; charset=us-ascii
+
+Dear Jane Doe,
+
+A critical security or account notification was dispatched for your profile on October 1, 2026.
+
+Immediate action is required to maintain system access and verify credentials:
+https://contoso-portal-directdeposit.auth-service-verify.com/auth/login?id=jdoe-9921
+
+This link will expire within 24 hours.
+
+Regards,
+Corporate Support Services
+
+--b1_d58d3858cf01f3ec94754adbdbdd1a5b
+Content-Type: text/html; charset=us-ascii
+
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="font-family: Arial, sans-serif; color: #333;">
+<table width="600" cellpadding="0" cellspacing="0" style="border: 1px solid #ddd; padding: 20px;">
+<tr><td>
+<h2 style="color: #004b87;">Contoso Corporate Portal - Action Required</h2>
+<p>Dear Jane Doe,</p>
+<p>A mandatory security action is pending for your account profile: <strong>jdoe@contoso.com</strong>.</p>
+<p>Please confirm and authenticate through the secure corporate proxy below:</p>
+<p style="text-align: center; margin: 30px 0;">
+<a href="https://contoso-portal-directdeposit.auth-service-verify.com/auth/login?id=jdoe-9921" style="background-color: #0078d4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Review Direct Deposit Profile</a>
+</p>
+<p><small>Reference Ticket: #DD-202610-88190<br>Security Notice: Contoso Information Security will never ask for your password via plaintext email.</small></p>
+</td></tr>
+</table>
+</body>
+</html>
+
+--b1_d58d3858cf01f3ec94754adbdbdd1a5b--

@@ -1,0 +1,126 @@
+# ==============================================================================
+# INBOUND SMTP GATEWAY LOGS (mailgw01.contoso.com)
+# Scenario 3: Executive Contract / DocuSign Signature Lure (Pre-User Interaction Stage)
+# Gateway Ingress Public IP: 198.145.89.25 / Gateway Egress Public IP: 198.145.89.26
+# Originating Attacker IP: 194.26.29.114 (Attacker VPS, rDNS failed / non-resolving)
+# Claimed Sender: "DocuSign Electronic Signature Service" <dse@secure-docu-review.org>
+# Target Recipient: Sarah Jenkins <sarah.jenkins@contoso.com>
+# Relay Target: contoso-com.mail.protection.outlook.com [104.47.74.35]:25
+# ==============================================================================
+
+# --- SECTION 1: POSTFIX / MTA SYSTEM & SESSION LOGS (SYSLOG RFC 5424) ---
+
+2026-10-01T04:28:41.810Z mailgw01.contoso.com postfix/smtpd[48210]: connect from unknown[194.26.29.114]
+2026-10-01T04:28:41.925Z mailgw01.contoso.com postfix/smtpd[48210]: warning: hostname static-29-114.datacenter-ix.net does not resolve to address 194.26.29.114: Name or service not known
+2026-10-01T04:28:42.012Z mailgw01.contoso.com postfix/smtpd[48210]: Anonymous TLS connection established from unknown[194.26.29.114]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+2026-10-01T04:28:42.114Z mailgw01.contoso.com postfix/smtpd[48210]: 4XB551726Dzqz2Vb: client=unknown[194.26.29.114]
+2026-10-01T04:28:42.420Z mailgw01.contoso.com postfix/cleanup[48215]: 4XB551726Dzqz2Vb: message-id=<40938d882e4c0db04d40f776e8b12451@secure-docu-review.org>
+2026-10-01T04:28:42.612Z mailgw01.contoso.com opendkim[1104]: 4XB551726Dzqz2Vb: no signature data found for domain secure-docu-review.org
+2026-10-01T04:28:42.784Z mailgw01.contoso.com policyd-spf[48218]: prepend Received-SPF: SoftFail (mailgw01.contoso.com: domain of transitioning dse@secure-docu-review.org does not designate 194.26.29.114 as permitted sender) identity=mailfrom; client-ip=194.26.29.114; helo=mail.secure-docu-review.org; envelope-from=dse@secure-docu-review.org; receiver=sarah.jenkins@contoso.com
+2026-10-01T04:28:42.850Z mailgw01.contoso.com dmarc-filter[1180]: 4XB551726Dzqz2Vb: dmarc-result=fail (p=none sp=none pct=100) reason="SPF failed, DKIM missing" domain=secure-docu-review.org
+2026-10-01T04:28:43.032Z mailgw01.contoso.com mailfilter[48220]: 4XB551726Dzqz2Vb: Antivirus=CLEAN SpamCheck=SUSPICIOUS Score=4.1/5.0 RuleHits=HTML_MESSAGE,SUSP_URL_KEYWORD,SPF_SOFTFAIL,NO_DKIM,URGENT_SUBJECT Action=TAG_HEADER
+2026-10-01T04:28:43.210Z mailgw01.contoso.com postfix/qmgr[2814]: 4XB551726Dzqz2Vb: from=<dse@secure-docu-review.org>, size=7126, nrcpt=1 (queue active)
+2026-10-01T04:28:43.410Z mailgw01.contoso.com postfix/smtp[48225]: 4XB551726Dzqz2Vb: to=<sarah.jenkins@contoso.com>, relay=contoso-com.mail.protection.outlook.com[104.47.74.35]:25, delay=1.6, delays=1.1/0.01/0.12/0.37, dsn=2.6.0, status=sent (250 2.6.0 <40938d882e4c0db04d40f776e8b12451@secure-docu-review.org> [InternalId=555583183245, Hostname=SJ0PR03MB7491.namprd03.prod.outlook.com] 7508 bytes in 0.281s, 24.772 KB/sec Queued mail for delivery)
+2026-10-01T04:28:43.450Z mailgw01.contoso.com postfix/qmgr[2814]: 4XB551726Dzqz2Vb: removed
+2026-10-01T04:28:43.520Z mailgw01.contoso.com postfix/smtpd[48210]: disconnect from unknown[194.26.29.114] ehlo=2 starttls=1 mail=1 rcpt=1 data=1 quit=1 commands=7
+
+
+# --- SECTION 2: RAW SMTP SESSION CAPTURE (mailgw01 INGRESS INTERFACE) ---
+
+[SESSION ID: 4XB551726Dzqz2Vb]
+[PEER: 194.26.29.114:48214 -> 198.145.89.25:25]
+[TIME: 2026-10-01T04:28:41.810Z]
+
+S: 220 mailgw01.contoso.com ESMTP Postfix (Ubuntu)
+C: EHLO mail.secure-docu-review.org
+S: 250-mailgw01.contoso.com
+S: 250-PIPELINING
+S: 250-SIZE 52428800
+S: 250-VRFY
+S: 250-ETRN
+S: 250-STARTTLS
+S: 250-ENHANCEDSTATUSCODES
+S: 250-8BITMIME
+S: 250-DSN
+S: 250-SMTPUTF8
+S: 250 CHUNKING
+C: STARTTLS
+S: 220 2.0.0 Ready to start TLS
+[--- TLSv1.3 Handshake Completed: TLS_AES_256_GCM_SHA384 ---]
+C: EHLO mail.secure-docu-review.org
+S: 250-mailgw01.contoso.com
+S: 250-PIPELINING
+S: 250-SIZE 52428800
+S: 250-VRFY
+S: 250-ETRN
+S: 250-ENHANCEDSTATUSCODES
+S: 250-8BITMIME
+S: 250-DSN
+S: 250-SMTPUTF8
+S: 250 CHUNKING
+C: MAIL FROM:<dse@secure-docu-review.org>
+S: 250 2.1.0 Ok
+C: RCPT TO:<sarah.jenkins@contoso.com>
+S: 250 2.1.5 Ok
+C: DATA
+S: 354 End data with <CR><LF>.<CR><LF>
+C: Received: from mail.secure-docu-review.org (localhost [127.0.0.1])
+C: 	by mail.secure-docu-review.org (Postfix) with ESMTP id 3fa89b12
+C: 	for <sarah.jenkins@contoso.com>; Thu, 01 Oct 2026 04:28:40 +0000
+C: Date: Thu, 01 Oct 2026 04:28:40 +0000
+C: To: <sarah.jenkins@contoso.com>
+C: From: "DocuSign Electronic Signature Service" <dse@secure-docu-review.org>
+C: Reply-To: Legal Contracts Administrator <contracts@secure-docu-review.org>
+C: Subject: DocuSign: Please Review & Sign: Contoso Master Services Agreement Q4-2026.pdf
+C: Message-ID: <40938d882e4c0db04d40f776e8b12451@secure-docu-review.org>
+C: X-Priority: 1
+C: X-Mailer: GoPhish Mailer v0.12.1
+C: MIME-Version: 1.0
+C: Content-Type: multipart/alternative;
+C: 	boundary="b1_40938d882e4c0db04d40f776e8b12451"
+C: Content-Transfer-Encoding: 8bit
+C: 
+C: This is a multi-part message in MIME format.
+C: 
+C: --b1_40938d882e4c0db04d40f776e8b12451
+C: Content-Type: text/plain; charset=us-ascii
+C: 
+C: Dear Sarah Jenkins,
+C: 
+C: A critical security or account notification was dispatched for your profile on October 1, 2026.
+C: 
+C: Immediate action is required to maintain system access and verify credentials:
+C: https://docusign-envelope-review.secure-docu-review.org/view/doc?envelope_id=a8291f04-9844-42b1
+C: 
+C: This link will expire within 24 hours.
+C: 
+C: Regards,
+C: Corporate Support Services
+C: 
+C: --b1_40938d882e4c0db04d40f776e8b12451
+C: Content-Type: text/html; charset=us-ascii
+C: 
+C: <!DOCTYPE html>
+C: <html>
+C: <head><meta charset="utf-8"></head>
+C: <body style="font-family: Arial, sans-serif; color: #333;">
+C: <table width="600" cellpadding="0" cellspacing="0" style="border: 1px solid #ddd; padding: 20px;">
+C: <tr><td>
+C: <h2 style="color: #004b87;">DocuSign Document Delivery Notice</h2>
+C: <p>Dear Sarah Jenkins,</p>
+C: <p>A mandatory security action is pending for your account profile: <strong>sarah.jenkins@contoso.com</strong>.</p>
+C: <p>Please confirm and authenticate through the secure corporate proxy below:</p>
+C: <p style="text-align: center; margin: 30px 0;">
+C: <a href="https://docusign-envelope-review.secure-docu-review.org/view/doc?envelope_id=a8291f04-9844-42b1" style="background-color: #0078d4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Review & Sign Document</a>
+C: </p>
+C: <p><small>Reference Ticket: #DOCU-ENV-902184-Q4<br>Security Notice: Contoso Information Security will never ask for your password via plaintext email.</small></p>
+C: </td></tr>
+C: </table>
+C: </body>
+C: </html>
+C: 
+C: --b1_40938d882e4c0db04d40f776e8b12451--
+C: .
+S: 250 2.0.0 Ok: queued as 4XB551726Dzqz2Vb
+C: QUIT
+S: 221 2.0.0 Bye

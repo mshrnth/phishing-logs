@@ -1,0 +1,273 @@
+# ==============================================================================
+# MICROSOFT 365 / EXCHANGE ONLINE & OUTLOOK MAILBOX AUDIT LOGS
+# Scenario 3: Executive Contract / DocuSign Signature Lure (Pre-User Interaction State)
+# Target Mailbox: sarah.jenkins@contoso.com (Sarah Jenkins - Corporate Counsel)
+# Mailbox Location: Exchange Online (Tenant ID: 7b81c2f4-610b-419b-a3d8-e1b93d45c802)
+# Incident Stage: Item Delivered to Inbox; User has NOT read, clicked, or interacted
+# Status: Unread (IsRead = False), No URL Click, No Attachment Download
+# ==============================================================================
+
+
+# ------------------------------------------------------------------------------
+# SECTION 1: EXCHANGE ONLINE MESSAGE TRACE DETAIL (Get-MessageTraceDetail)
+# ------------------------------------------------------------------------------
+
+MessageTraceId        : 1dd94b9e-f3df-459a-b060-958e727f1a4f
+MessageId             : <40938d882e4c0db04d40f776e8b12451@secure-docu-review.org>
+Received              : 2026-10-01T04:28:43.410Z
+SenderAddress         : dse@secure-docu-review.org
+RecipientAddress      : sarah.jenkins@contoso.com
+Subject               : [EXTERNAL] DocuSign: Please Review & Sign: Contoso Master Services Agreement Q4-2026.pdf
+Status                : Delivered
+ToIP                  : 10.240.18.62 (Mailbox Database Store)
+FromIP                : 198.145.89.26 (mailgw01.contoso.com Public Egress)
+Size                  : 7508
+Direction             : Inbound
+
+Events:
+[
+  {
+    "Date": "2026-10-01T04:28:43.412Z",
+    "Event": "Receive",
+    "Action": "Message received by connector BN8NAM11FT029.mail.protection.outlook.com from 198.145.89.26",
+    "Detail": "Inbound session established over TLS 1.3."
+  },
+  {
+    "Date": "2026-10-01T04:28:43.680Z",
+    "Event": "Transport rule",
+    "Action": "Rule 'Vendor Contract Routing Bypass' matched",
+    "Detail": "Set spam confidence level (SCL) to -1 and bypassed spam filtering (SFV:SKN) due to rule condition: Subject matches 'DocuSign:*' with high executive priority override."
+  },
+  {
+    "Date": "2026-10-01T04:28:43.790Z",
+    "Event": "Transport rule",
+    "Action": "Rule 'External Sender Warning' matched",
+    "Detail": "Prepended '[EXTERNAL] ' to message subject and added external sender metadata header."
+  },
+  {
+    "Date": "2026-10-01T04:28:44.090Z",
+    "Event": "Deliver",
+    "Action": "Delivered to mailbox",
+    "Detail": "The message was successfully delivered to the mailbox 'sarah.jenkins@contoso.com' in folder 'Inbox'. InternalMessageId: 555583183245."
+  }
+]
+
+
+# ------------------------------------------------------------------------------
+# SECTION 2: DEFENDER XDR (ADVANCED HUNTING) & PURVIEW AUDIT TELEMETRY
+# (KQL query results confirming pre-interaction state at 2026-10-01T04:28:44.090Z)
+# ------------------------------------------------------------------------------
+
+# Query: EmailEvents | where NetworkMessageId == "1dd94b9e-f3df-459a-b060-958e727f1a4f"
+{
+  "Timestamp": "2026-10-01T04:28:44.090Z",
+  "NetworkMessageId": "1dd94b9e-f3df-459a-b060-958e727f1a4f",
+  "InternetMessageId": "<40938d882e4c0db04d40f776e8b12451@secure-docu-review.org>",
+  "SenderMailFromAddress": "dse@secure-docu-review.org",
+  "SenderFromAddress": "dse@secure-docu-review.org",
+  "SenderDisplayName": "DocuSign Electronic Signature Service",
+  "RecipientEmailAddress": "sarah.jenkins@contoso.com",
+  "Subject": "[EXTERNAL] DocuSign: Please Review & Sign: Contoso Master Services Agreement Q4-2026.pdf",
+  "DeliveryAction": "Delivered",
+  "DeliveryLocation": "Inbox",
+  "EmailDirection": "Inbound",
+  "SenderIPv4": "194.26.29.114",
+  "AuthenticationDetails": "{\"SPF\": \"softfail\", \"DKIM\": \"none\", \"DMARC\": \"fail\"}",
+  "ThreatTypes": "Phish",
+  "ThreatNames": "URL-Reputation",
+  "DetectionMethods": "URL analysis",
+  "EmailLanguage": "en",
+  "OrgLevelAction": "Allow",
+  "OrgLevelPolicy": "TransportRule",
+  "UserLevelAction": "None",
+  "UserLevelPolicy": "None"
+}
+
+# Query: UrlClickEvents | where NetworkMessageId == "1dd94b9e-f3df-459a-b060-958e727f1a4f"
+# Result: 0 records found. (No SafeLinks click events registered)
+
+# Query: EmailPostDeliveryEvents | where NetworkMessageId == "1dd94b9e-f3df-459a-b060-958e727f1a4f"
+# Result: 0 records found. (No ZAP, quarantine release, or user-reported phish events yet)
+
+# Query: Search-UnifiedAuditLog -RecordType ExchangeItem -Operations MailItemsAccessed -FreeText "1dd94b9e-f3df-459a-b060-958e727f1a4f"
+# Result: 0 records found. (Mailbox owner sarah.jenkins@contoso.com has NOT opened/read or accessed the item)
+
+
+# ------------------------------------------------------------------------------
+# SECTION 3: OUTLOOK MAPI / GRAPH API MESSAGE OBJECT (INBOX ITEM STATE)
+# ------------------------------------------------------------------------------
+
+GET https://graph.microsoft.com/v1.0/users/sarah.jenkins@contoso.com/messages/AAMkADhkOWM2YTZmLTllYmItNDkyNC1hZGI0LWVhOTg0OTM2OGQ3MQBGAAAAAAB4d1bd9fb56e34e1a3e7025dd5a3f9b3408761...
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{
+  "id": "AAMkADhkOWM2YTZmLTllYmItNDkyNC1hZGI0LWVhOTg0OTM2OGQ3MQBGAAAAAAB4d1bd9fb56e34e1a3e7025dd5a3f9b3408761...",
+  "createdDateTime": "2026-10-01T04:28:44Z",
+  "lastModifiedDateTime": "2026-10-01T04:28:44Z",
+  "receivedDateTime": "2026-10-01T04:28:44Z",
+  "sentDateTime": "2026-10-01T04:28:40Z",
+  "hasAttachments": false,
+  "internetMessageId": "<40938d882e4c0db04d40f776e8b12451@secure-docu-review.org>",
+  "subject": "[EXTERNAL] DocuSign: Please Review & Sign: Contoso Master Services Agreement Q4-2026.pdf",
+  "importance": "high",
+  "parentFolderId": "AQMkADhkOWM2YTZmLTllYmItNDkyNC1hZGI0LWVhOTg0OTM2OGQ3MQAuAAADeGfT9clnNUmtu...",
+  "conversationId": "AAQkADhkOWM2YTZmLTllYmItNDkyNC1hZGI0LWVhOTg0OTM2OGQ3MQAQAMX...",
+  "isRead": false,
+  "isDraft": false,
+  "webLink": "https://outlook.office365.com/owa/?ItemID=AAMkADhkOWM2YTZmLTllYmItNDkyNC1hZGI0LWVhOTg0OTM2OGQ3MQBGAAAAAAB4d1bd9fb56e34e1a3e7025dd5a3f9b3408761...",
+  "inferenceClassification": "other",
+  "sender": {
+    "emailAddress": {
+      "name": "DocuSign Electronic Signature Service",
+      "address": "dse@secure-docu-review.org"
+    }
+  },
+  "from": {
+    "emailAddress": {
+      "name": "DocuSign Electronic Signature Service",
+      "address": "dse@secure-docu-review.org"
+    }
+  },
+  "toRecipients": [
+    {
+      "emailAddress": {
+        "name": "Sarah Jenkins",
+        "address": "sarah.jenkins@contoso.com"
+      }
+    }
+  ],
+  "replyTo": [
+    {
+      "emailAddress": {
+        "name": "Legal Contracts Administrator",
+        "address": "contracts@secure-docu-review.org"
+      }
+    }
+  ],
+  "flag": {
+    "flagStatus": "notFlagged"
+  }
+}
+
+
+# ------------------------------------------------------------------------------
+# SECTION 4: COMPLETE RFC 822 / OUTLOOK INTERNET MESSAGE HEADERS
+# (Extracted via Outlook Desktop: File -> Properties -> Internet headers,
+#  or OWA: Message Details)
+# ------------------------------------------------------------------------------
+
+Received: from SJ0PR03MB7491.namprd03.prod.outlook.com (2603:10b6:408:149::19)
+ by BL0PR03MB4812.namprd03.prod.outlook.com with HTTPS; Thu, 01 Oct 2026 04:28:44 +0000
+Received: from BN0PR03CA0041.namprd03.prod.outlook.com (2603:10b6:408:44::16)
+ by SJ0PR03MB7491.namprd03.prod.outlook.com (2603:10b6:408:149::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9123.18; Thu, 01 Oct 2026 04:28:44 +0000
+Received: from BN8NAM11FT029.mail.protection.outlook.com
+ (2603:10b6:408:44:cafe::94) by BN0PR03CA0041.outlook.office365.com
+ (2603:10b6:408:44::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9123.14 via Frontend
+ Transport; Thu, 01 Oct 2026 04:28:44 +0000
+Authentication-Results: spf=softfail (sender IP is 194.26.29.114)
+ smtp.mailfrom=secure-docu-review.org; dkim=none (message not signed)
+ header.d=none; dmarc=fail action=none
+ header.from=secure-docu-review.org; compauth=fail reason=001
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ secure-docu-review.org discourages use of 194.26.29.114 as permitted sender)
+Received: from mailgw01.contoso.com (198.145.89.26) by
+ BN8NAM11FT029.mail.protection.outlook.com (104.47.74.35) with Microsoft SMTP
+ Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9123.11 via
+ Frontend Transport; Thu, 01 Oct 2026 04:28:43 +0000
+X-Gateway-Scanned: mailgw01.contoso.com on 2026-10-01_04:28:43
+X-Gateway-Spam-Status: No, score=4.1 required=5.0 tests=HTML_MESSAGE,SPF_SOFTFAIL,NO_DKIM,URGENT_SUBJECT,SUSP_URL_KEYWORD autolearn=no
+X-Gateway-Spam-Score: 4.1
+Received-SPF: SoftFail (mailgw01.contoso.com: domain of transitioning
+ dse@secure-docu-review.org does not designate 194.26.29.114 as
+ permitted sender) identity=mailfrom; client-ip=194.26.29.114;
+ helo=mail.secure-docu-review.org;
+ envelope-from=dse@secure-docu-review.org; receiver=sarah.jenkins@contoso.com
+Received: from mail.secure-docu-review.org (unknown [194.26.29.114])
+ by mailgw01.contoso.com (Postfix) with ESMTPS id 4XB551726Dzqz2Vb
+ for <sarah.jenkins@contoso.com>; Thu, 01 Oct 2026 04:28:41 +0000
+Received: from mail.secure-docu-review.org (localhost [127.0.0.1])
+	by mail.secure-docu-review.org (Postfix) with ESMTP id 3fa89b12
+	for <sarah.jenkins@contoso.com>; Thu, 01 Oct 2026 04:28:40 +0000
+Date: Thu, 01 Oct 2026 04:28:40 +0000
+To: <sarah.jenkins@contoso.com>
+From: "DocuSign Electronic Signature Service" <dse@secure-docu-review.org>
+Reply-To: Legal Contracts Administrator <contracts@secure-docu-review.org>
+Subject: [EXTERNAL] DocuSign: Please Review & Sign: Contoso Master Services Agreement Q4-2026.pdf
+Message-ID: <40938d882e4c0db04d40f776e8b12451@secure-docu-review.org>
+X-Priority: 1
+X-Mailer: GoPhish Mailer v0.12.1
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="b1_40938d882e4c0db04d40f776e8b12451"
+Content-Transfer-Encoding: 8bit
+Importance: High
+X-MSMail-Priority: High
+X-External-Sender: YES
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Organization-MessageDirectionality: Inbound
+X-MS-Exchange-Organization-AuthSource: mailgw01.contoso.com
+X-MS-Exchange-Organization-AuthAs: Anonymous
+X-MS-Exchange-Organization-Network-Message-Id: 1dd94b9e-f3df-459a-b060-958e727f1a4f
+X-MS-Exchange-Organization-Rules-ExecutionHistory: RuleId:7820a1bc-89cc-4321-b0a1-77810459c012;RuleName:Vendor Contract Routing Bypass;Action:SetSCL;
+X-MS-Exchange-Organization-SCL: -1
+X-MS-Exchange-Organization-PCL: 2
+X-Forefront-Antispam-Report: CIP:198.145.89.26;CTRY:US;LANG:en;SCL:-1;SRV:DIR;IPV:CAL;SFV:SKN;H:mailgw01.contoso.com;PTR:mailgw01.contoso.com;CAT:PHSH;SFS:(136003)(396003)(366004)(346002)(376002);DIR:INB;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|46104249079|82310400026|36860700013|440099029;
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2026 04:28:43.4100 (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-Id: 7b81c2f4-610b-419b-a3d8-e1b93d45c802
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-EndToEndLatency: 00:00:00.6800000
+X-MS-Exchange-Processed-By-BccFoldering: 15.20.9123.018
+X-Microsoft-Antispam-Mailbox-Delivery:
+ ucf:0;jmr:0;auth:0;dest:I;ENG:(910001)(944506478)(944626604)(920097)(930097)(140003);
+X-Microsoft-Antispam-Message-Info:
+ nPP5M7CbnbVW9fAIOlwuofHuT+RbMLYyEVSh5d2BOPY6BCgy5CVSSF7Rz4ouv9QY
+ VnEpFJBztJ1jTqja1xTe842pAET6GvKu5QPwzmR7WdrD1yrcTsLTFiMN+0SDTGdK
+ eqfJEVC61R4F5l8efZcwlEaiB8FyhuN74RQcv+R4ejX2FCrgpmQmOzp6usTX5wWD
+ vDh8YNMwgwXhJ37aaVcm/leyjYS8k4Pg0/w0PEnfqnAaP6R7cR2InXi6Q9WTpMAI
+
+This is a multi-part message in MIME format.
+
+--b1_40938d882e4c0db04d40f776e8b12451
+Content-Type: text/plain; charset=us-ascii
+
+Dear Sarah Jenkins,
+
+A critical security or account notification was dispatched for your profile on October 1, 2026.
+
+Immediate action is required to maintain system access and verify credentials:
+https://docusign-envelope-review.secure-docu-review.org/view/doc?envelope_id=a8291f04-9844-42b1
+
+This link will expire within 24 hours.
+
+Regards,
+Corporate Support Services
+
+--b1_40938d882e4c0db04d40f776e8b12451
+Content-Type: text/html; charset=us-ascii
+
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="font-family: Arial, sans-serif; color: #333;">
+<table width="600" cellpadding="0" cellspacing="0" style="border: 1px solid #ddd; padding: 20px;">
+<tr><td>
+<h2 style="color: #004b87;">DocuSign Document Delivery Notice</h2>
+<p>Dear Sarah Jenkins,</p>
+<p>A mandatory security action is pending for your account profile: <strong>sarah.jenkins@contoso.com</strong>.</p>
+<p>Please confirm and authenticate through the secure corporate proxy below:</p>
+<p style="text-align: center; margin: 30px 0;">
+<a href="https://docusign-envelope-review.secure-docu-review.org/view/doc?envelope_id=a8291f04-9844-42b1" style="background-color: #0078d4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Review & Sign Document</a>
+</p>
+<p><small>Reference Ticket: #DOCU-ENV-902184-Q4<br>Security Notice: Contoso Information Security will never ask for your password via plaintext email.</small></p>
+</td></tr>
+</table>
+</body>
+</html>
+
+--b1_40938d882e4c0db04d40f776e8b12451--
